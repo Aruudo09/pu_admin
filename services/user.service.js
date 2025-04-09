@@ -1,10 +1,10 @@
-const userRepository = require("../repositories/user.repository");
+const UserRepository = require("../repositories/user.repository");
 const { hashPassword } = require("../utils/hash");
 
 class UserService {
   async getAllUsers() {
     try {
-      const users = await userRepository.getAllUsers();
+      const users = await UserRepository.getAllUsers();
       if (users.length === 0) {
         throw new Error("No users found"); // Menangani kasus data kosong
       }
@@ -16,7 +16,7 @@ class UserService {
 
   async getUserById(id) {
     try {
-      const user = await userRepository.getUserById(id);
+      const user = await UserRepository.getUserById(id);
       if (!user) {
         throw new Error("User not found"); // Melempar error jika user tidak ditemukan
       }
@@ -36,7 +36,7 @@ class UserService {
       // 🔒 Hash password sebelum disimpan
       userData.password = await hashPassword(userData.password);
 
-      return await userRepository.createUser(userData);
+      return await UserRepository.createUser(userData);
     } catch (error) {
       throw new Error(error.message);
     }
@@ -44,11 +44,11 @@ class UserService {
 
   async updateUser(id, userData) {
     try {
-      const user = await userRepository.getUserById(id);
+      const user = await UserRepository.getUserById(id);
       if (!user) {
         throw new Error("User not found");
       }
-      await userRepository.updateUser(id, userData);
+      await UserRepository.updateUser(id, userData);
       return { message: "User updated successfully" };
     } catch (error) {
       throw new Error(error.message);
@@ -57,11 +57,11 @@ class UserService {
 
   async deleteUser(id) {
     try {
-      const user = await userRepository.getUserById(id);
+      const user = await UserRepository.getUserById(id);
       if (!user) {
         throw new Error("User not found");
       }
-      await userRepository.deleteUser(id);
+      await UserRepository.deleteUser(id);
       return { message: "User deleted successfully" };
     } catch (error) {
       throw new Error(error.message);

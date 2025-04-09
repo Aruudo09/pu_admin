@@ -1,20 +1,19 @@
 module.exports = (sequelize, DataTypes) => {
-    const User = sequelize.define("Userlevel", {
-      id: {
+    const Userlevel = sequelize.define("Userlevel", {
+      id_level: {
         type: DataTypes.INTEGER,
-        autoIncrement: true,
         primaryKey: true,
       },
-      username: {
+      nama_level: {
         type: DataTypes.STRING(20),
-        allowNull: true,
+        allowNull: false,
       }
     },
     {
-      tableName: "tbl_user", // 👈 Tambahkan ini agar Sequelize pakai nama tabel yang benar
+      tableName: "tbl_userlevel", // 👈 Tambahkan ini agar Sequelize pakai nama tabel yang benar
       timestamps: false // Hapus jika pakai createdAt & updatedAt
     });
   
-    return User;
+    return Userlevel;
   };
   
