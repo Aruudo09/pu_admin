@@ -40,6 +40,12 @@ module.exports = (sequelize, DataTypes) => {
       tableName: "tbl_akses_submenu", // 👈 Tambahkan ini agar Sequelize pakai nama tabel yang benar
       timestamps: false // Hapus jika pakai createdAt & updatedAt
     });
+
+    Aksessubmenu.associate = (models) => {
+      Aksessubmenu.belongsTo(models.Userlevel, { foreignKey: 'id_level' });
+      Aksessubmenu.belongsTo(models.Submenu, { foreignKey: 'id_submenu' });
+    };
+    
   
     return Aksessubmenu;
   };

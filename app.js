@@ -1,43 +1,74 @@
 const express = require("express");
+const session = require("express-session");
 const cors = require("cors");
 const bodyParser = require("body-parser");
-// const userRoutes = require("./routes/user.routes"); // Import file routes
 const fs = require("fs");
 const path = require("path");
 
 const app = express();
 
-// Middleware
-app.use(cors()); // Mengizinkan CORS (opsional)
-app.use(bodyParser.json()); // Parsing request body JSON
-app.use(bodyParser.urlencoded({ extended: true })); // Parsing form data
+// 🧠 Session setup
+app.use(
+  session({
+    secret: "rahasia_kamu",
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: false },
+  })
+);
 
-// Routes
-// app.use("/api/users", userRoutes); // Gunakan router user
-// Auto-import routes
-const routesPath = path.join(__dirname, "routes");
+app.use(express.static(path.join(__dirname, "public")));
 
-fs.readdirSync(routesPath).forEach((file) => {
-  if (file.endsWith(".routes.js")) {
-    const route = require(path.join(routesPath, file));
-    
-    // Buat prefix otomatis dari nama file: "user.routes.js" => "user"
-    const routeName = file.split(".")[0]; // ambil 'user' dari 'user.routes.js'
-    app.use(`/api/${routeName}`, route);
-  }
+// 🌐 Middleware untuk inject data user ke view
+app.use((req, res, next) => {
+  res.locals.username = req.session.user?.username || null;
+  res.locals.fullname = req.session.user?.fullname || null;
+  next();
 });
 
-// Route default
+// 📄 Parsing Middleware
+app.use(cors());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+
+// 📂 Static dan View
+app.set("view engine", "ejs");
+app.set("views", path.join(__dirname, "views"));
+
+// 🔐 Auth routes
+const authRoutes = require("./routes/auth.routes");
+app.use("/", authRoutes);
+
+// 📦 Auto-load UI Routes
+const uiRoutesPath = path.join(__dirname, "routes", "ui");
+if (fs.existsSync(uiRoutesPath)) {
+  fs.readdirSync(uiRoutesPath).forEach((file) => {
+    if (file.endsWith(".routes.js")) {
+      const route = require(path.join(uiRoutesPath, file));
+      app.use("/", route); // tanpa prefix karena ini UI
+    }
+  });
+}
+
+// 🔌 Auto-load API Routes
+const apiRoutesPath = path.join(__dirname, "routes", "api");
+if (fs.existsSync(apiRoutesPath)) {
+  fs.readdirSync(apiRoutesPath).forEach((file) => {
+    if (file.endsWith(".routes.js")) {
+      const route = require(path.join(apiRoutesPath, file));
+      const routeName = file.split(".")[0]; // user.routes.js => user
+      app.use(`/api/${routeName}`, route);
+    }
+  });
+}
+
+// 🏠 Root redirect
 app.get("/", (req, res) => {
-  res.send("Welcome to the Express API!");
+  res.redirect("/login");
 });
 
-// Jalankan server
+// 🚀 Server run
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
+  console.log(`Server running at http://localhost:${PORT}`);
 });
-
-// app.listen(3000, '0.0.0.0', () => {
-//     console.log('Server running on port 3000 and accessible on the network');
-//   });
