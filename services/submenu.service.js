@@ -25,20 +25,20 @@ class SubmenuService {
     return await SubmenuRepository.createSubmenu(subMenuData);
   }
 
-  async updateMenu(id_submenu, subMenuData) {
+  async updateSubmenu(id_submenu, subMenuData) {
     const submenu = await SubmenuRepository.getSubmenuById(id_submenu);
     if (!submenu) {
       throw new Error("Submenu not found");
     }
-    return await SubmenuRepository.updateMenu(id_submenu, menuData);
+    return await SubmenuRepository.updateSubmenu(id_submenu, subMenuData);
   }
 
-  async deleteMenu(id_submenu) {
+  async deleteSubmenu(id_submenu) {
     const submenu = await SubmenuRepository.getSubmenuById(id_submenu);
     if (!submenu) {
       throw new Error("Submenu not found");
     }
-    return await SubmenuRepository.deleteMenu(id_submenu);
+    return await SubmenuRepository.deleteSubmenu(id_submenu);
   }
 }
 
