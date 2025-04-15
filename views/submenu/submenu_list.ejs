@@ -72,7 +72,7 @@
                             <td><%= men.nama_submenu %></td>
                             <td><%= men.link %></td>
                             <td><%= men.icon %></td>
-                            <td><%= men.korelasi.nama_menu %></td>
+                            <td><%= men.id_menu %></td>
                             <td><%= men.urutan %></td>
                             <td><%= men.is_active %></td>
                             <td>
@@ -174,7 +174,7 @@
                             <label for="id_menu">Menu</label>
                             <select name="id_menu" id="id_menu" class="form-select">
                                 <option value="" selected disabled>Pilih Opsi...</option>
-                                <% opsi.forEach(item => { %>
+                                <% menu.forEach(item => { %>
                                   <option value="<%= item.id_menu %>"><%= item.nama_menu %></option>
                                 <% }); %>
                             </select>

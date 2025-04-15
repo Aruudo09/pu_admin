@@ -2,7 +2,7 @@ const UserlevelRepository = require("../repositories/userlevel.repository");
 
 class UserlevelService {
   async getAllUserlevel() {
-    const userlevel = await UserlevelRepository.getAllUserlevel();
+    const userlevel = await UserlevelRepository.getAllUserlevels();
     if (userlevel.length === 0) {
       throw new Error("No userlevel found");
     }

@@ -28,7 +28,7 @@ class AuthController {
         username: user.username,
         fullname: user.fullname, // ini penting kalau kamu mau pakai fullname
       };
-      return res.redirect("/home");
+      return res.redirect("/dashboard");
     } catch (error) {
       console.error(error);
       return res.render("login", { error: "Terjadi kesalahan pada server" });

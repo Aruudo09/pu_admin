@@ -1,11 +1,10 @@
 const express = require("express");
 const router = express.Router();
-const { ensureAuth } = require("../../middleware/auth");
-const loadSidebar = require("../../middleware/loadSidebar");
+const { auth, loadSidebar } = require("../../middleware");
 const GalleryService = require("../../services/galleries/gallery.service");
 
 // TAMPILAN LIST
-router.get("/", ensureAuth, loadSidebar, async (req, res) => {
+router.get("/", auth.ensureAuth, loadSidebar, async (req, res) => {
   try {
     const galleries = await GalleryService.getAllGallery();
 
@@ -24,7 +23,7 @@ router.get("/", ensureAuth, loadSidebar, async (req, res) => {
 });
 
 // TAMPILAN FORM
-router.get("/form", ensureAuth, loadSidebar, async (req, res) => {
+router.get("/form", auth.ensureAuth, loadSidebar, async (req, res) => {
   res.render("home", {
     link: "galleries/gallery_form",
     jslink: "javascript/gallery_javascript.js",
