@@ -29,8 +29,10 @@
               <div class="d-flex align-items-center">
                 <h4 class="card-title">Users Table</h4>
                 <a
+                  data-bs-toggle="modal"
+                  data-bs-target="#userFormModal"
                   class="btn btn-primary btn-round ms-auto"
-                  href="/users_form"
+                  href=""
                 >
                   <i class="fa fa-plus"></i>
                   Add Row
@@ -69,12 +71,8 @@
                             <td>
                                 <div class="form-button-action">
                                 <a
-                                    data-bs-toggle="modal"
-                                    data-bs-target="#editUserModal"
                                     data-id="<%= user.id %>"
-                                    data-bs-toggle="tooltip"
-                                    title=""
-                                    class="btn btn-link btn-primary btn-lg userEditBtn"
+                                    class="btn btn-link btn-primary btn-lg userEdit"
                                     data-original-title="Edit Task"
                                   >
                                     <i class="fa fa-edit"></i>
@@ -84,7 +82,7 @@
                                     data-bs-toggle="tooltip"
                                     data-id="<%= user.id %>"
                                     title=""
-                                    class="btn btn-link btn-danger userDelBtn"
+                                    class="btn btn-link btn-danger userDelete"
                                     data-original-title="Remove"
                                   >
                                     <i class="fa fa-times"></i>
@@ -101,7 +99,7 @@
               <!-- MODAL EDIT DATA -->
               <div
               class="modal fade"
-              id="editUserModal"
+              id="userFormModal"
               tabindex="-1"
               role="dialog"
               aria-hidden="true"
@@ -110,7 +108,7 @@
                 <div class="modal-content">
                   <div class="modal-header border-0">
                     <h5 class="modal-title">
-                      <span class="fw-mediumbold"> Edit</span>
+                      <span class="fw-mediumbold"> Form</span>
                       <span class="fw-light"> User </span>
                     </h5>
                     <button
@@ -123,7 +121,7 @@
                     </button>
                   </div>
                   <div class="modal-body">
-                    <form id="form_edit_users">
+                    <form id="userForm">
                       <div class="row">
                         <div class="col-sm-12">
                           <div class="form-group form-group-default">
@@ -198,10 +196,10 @@
                   <div class="modal-footer border-0">
                     <button
                       type="button"
-                      id="editUpdateButton"
+                      id="submitUserBtn"
                       class="btn btn-primary"
                     >
-                      Edit
+                      Save
                     </button>
                     <button
                       type="button"

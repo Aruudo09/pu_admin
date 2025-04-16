@@ -29,8 +29,10 @@
               <div class="d-flex align-items-center">
                 <h4 class="card-title">Menu Table</h4>
                 <a
+                  data-bs-toggle="modal"
+                  data-bs-target="#menuModal"
                   class="btn btn-primary btn-round ms-auto"
-                  href="/menu/form"
+                  href=""
                 >
                   <i class="fa fa-plus"></i>
                   Add Row
@@ -75,13 +77,8 @@
                             <td>
                                 <div class="form-button-action">
                                 <a
-                                    data-bs-toggle="modal"
-                                    data-bs-target="#editUserModal"
                                     data-id="<%= men.id_menu %>"
-                                    data-bs-toggle="tooltip"
-                                    title=""
-                                    class="btn btn-link btn-primary btn-lg menuEditBtn"
-                                    data-original-title="Edit Task"
+                                    class="btn btn-link btn-primary btn-lg menuEdit"
                                   >
                                     <i class="fa fa-edit"></i>
                                 </a>
@@ -90,7 +87,7 @@
                                     data-bs-toggle="tooltip"
                                     data-id="<%= men.id_menu %>"
                                     title=""
-                                    class="btn btn-link btn-danger menuDelBtn"
+                                    class="btn btn-link btn-danger menuDelete"
                                     data-original-title="Remove"
                                   >
                                     <i class="fa fa-times"></i>
@@ -107,29 +104,28 @@
               <!-- MODAL EDIT DATA -->
               <div
               class="modal fade"
-              id="editUserModal"
+              id="menuModal"
               tabindex="-1"
               role="dialog"
               aria-hidden="true"
-            >
+              >
               <div class="modal-dialog" role="document">
                 <div class="modal-content">
                   <div class="modal-header border-0">
                     <h5 class="modal-title">
-                      <span class="fw-mediumbold"> Edit</span>
+                      <span class="fw-mediumbold"> Form</span>
                       <span class="fw-light"> Menu </span>
                     </h5>
                     <button
                       type="button"
-                      class="close"
+                      class="btn-close"
                       data-bs-dismiss="modal"
                       aria-label="Close"
                     >
-                      <span aria-hidden="true">&times;</span>
                     </button>
                   </div>
                   <div class="modal-body">
-                    <form id="form_edit_users">
+                    <form id="menuForm">
                       <div class="row">
                         <div class="col-sm-12">
                           <div class="form-group form-group-default">
@@ -193,10 +189,10 @@
                   <div class="modal-footer border-0">
                     <button
                       type="button"
-                      id="menuUpdateButton"
+                      id="submitMenuBtn"
                       class="btn btn-primary"
                     >
-                      Edit
+                      Save
                     </button>
                     <button
                       type="button"

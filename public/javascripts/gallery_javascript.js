@@ -45,7 +45,6 @@ document.addEventListener("DOMContentLoaded", () => {
       btn.addEventListener("click", async (e) => {
         e.preventDefault();
         const id = btn.getAttribute("data-id");
-        console.log('berhasil');
   
         try {
           const res = await fetch(`/api/galleries/gallery/${id}`);

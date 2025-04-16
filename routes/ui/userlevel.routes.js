@@ -11,7 +11,7 @@ router.get("/", auth.ensureAuth, loadSidebar, async (req, res) => {
 
         res.render("home", {
             link: "userlevel/userlevel_list",
-            jslink: "javascripts/javascript.js",
+            jslink: "javascripts/userlevel_javascript.js",
             user: req.session.user,
             username: req.session.user?.username || "Guest",
             fullname: req.session.user?.fullname || "Guest",

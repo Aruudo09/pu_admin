@@ -48,6 +48,7 @@ class UserService {
       if (!user) {
         throw new Error("User not found");
       }
+      userData.password = await hashPassword(userData.password);
       await UserRepository.updateUser(id, userData);
       return { message: "User updated successfully" };
     } catch (error) {

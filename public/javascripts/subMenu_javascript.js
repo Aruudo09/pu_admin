@@ -1,193 +1,124 @@
-$(document).ready(function() {
+document.addEventListener("DOMContentLoaded", () => {
 
-    // CREATE SUB MENU
-    $('#form_submenu').submit(function(e) {
-        e.preventDefault(); // Prevent the default form submission
-        
-        swal({
-          title: "Are you sure?",
-          text: "Do you want to submit this form?",
-          icon: "warning",
-          buttons: {
-            confirm: {
-              text: "Yes, submit it!",
-              className: "btn btn-success",
-            },
-            cancel: {
-              text: "Cancel",
-              visible: true,
-              className: "btn btn-danger",
-            },
-          },
-        }).then((willSubmit) => {
-          if (willSubmit) {
-           // If the user confirms, submit the form using AJAX
-          $.ajax({
-            url: "/submenu/create", // Form submission URL
-            type: "POST",
-            data: $("#form_submenu").serialize(), // Serialize form data
-            success: function(response) {
-              // Redirect to /users_list if the submission is successful
-              swal({
-                title: "Submission Success",
-                text: "Create new data is success",
-                icon: "success",
-                buttons: {
-                  confirm: {
-                    text: "OK",
-                    className: "btn btn-success",
-                  },
-                },
-              }).then(() => {
-                // Redirect to /users_list after the user clicks "OK"
-                window.location.href = "/submenu/list";
-              });
-            },
-            error: function(xhr, status, error) {
-              // Show SweetAlert error if submission fails
-              swal({
-                title: "Submission Failed",
-                text: "An error occurred while submitting the form. Please try again.",
-                icon: "error",
-                buttons: {
-                  confirm: {
-                    text: "OK",
-                    className: "btn btn-danger",
-                  },
-                },
-              });
-            }
-          });
-          } else {
-            swal.close();
-          }
-        });
+  // CREATE OR UPDATE
+  document.getElementById("submitSubmenuBtn").addEventListener("click", async () => {
+    const id = document.getElementById("hidden_id_submenu").value;
+    const nama_submenu = document.getElementById("nama_submenu").value;
+    const link = document.getElementById("link").value;
+    const icon = document.getElementById("icon").value;
+    const id_menu = document.getElementById("id_menu").value;
+    const urutan = document.getElementById("urutan").value;
+    const is_active = document.getElementById("is_active").value;
+
+  // Tentukan URL dan method berdasarkan id
+  const isUpdate = id !== "";
+  const url = isUpdate ? `/api/submenu/${id}` : `/api/submenu`;
+  const method = isUpdate ? "PUT" : "POST";
+
+    try {
+      const res = await fetch(url, {
+        method: method,
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          nama_submenu,
+          link,
+          icon,
+          urutan: parseInt(urutan),
+          is_active,
+          id_menu
+        }),
       });
 
-      // URURTAN SUBMENU
-      $.ajax({
-        url: '/submenu/get_max',
-        type: "GET",
-        success: function(data) {
-          $('#urutan').val(data + 1); // Opsional: Setel nilai input ke hasil
-        },
-        error: function(xhr, status, error) {
-          console.error('Error:', error); // Menangani error
+      const data = await res.json();
+
+      if (res.ok) {
+        swal("Berhasil!", data.message || "Submenu berhasil ditambahkan", "success");
+        setTimeout(() => location.reload(), 1500);
+      } else {
+        swal("Gagal!", data.message || "Terjadi kesalahan saat menyimpan data", "error");
+      }
+    } catch (err) {
+      swal("Error!", "Gagal menghubungi server", "error");
+    }
+  });
+
+  // MENGISI VALUE FORM (EDIT)
+  document.querySelectorAll(".submenuEdit").forEach((btn) => {
+    btn.addEventListener("click", async (e) => {
+      e.preventDefault();
+      const id = btn.getAttribute("data-id");
+      console.log("berhasil");
+
+      try {
+        const res = await fetch(`/api/submenu/${id}`);
+        const data = await res.json();
+        console.log(data);
+
+        if (data.status === "success") {
+          const submenu = data.data;
+
+          document.getElementById("hidden_id_submenu").value = submenu.id_submenu;
+          document.getElementById("nama_submenu").value = submenu.nama_submenu;
+          document.getElementById("link").value = submenu.link;
+          document.getElementById("icon").value = submenu.icon;
+          document.getElementById("id_menu").value = submenu.id_menu;
+          document.getElementById("is_active").value = submenu.is_active;
+          document.getElementById("urutan").value = submenu.urutan;
+
+          const modal = new bootstrap.Modal(document.getElementById("submenuModal"));
+          modal.show();
+        } else {
+          swal("Gagal", "Submenu tidak ditemukan", "error");
+        }
+      } catch (err) {
+        swal("Error", "Gagal menghubungi server", "error");
+      }
+    });
+  });
+
+  // RESET SAAT MENUTUP MODAL
+  document.getElementById('submenuModal').addEventListener('hidden.bs.modal', function () {
+      document.getElementById("submenuForm").reset();
+      document.getElementById("hidden_id_submenu").value = '';
+  });
+    
+
+  // DELETE
+  document.querySelectorAll(".submenuDelete").forEach((btn) => {
+    btn.addEventListener("click", (e) => {
+      e.preventDefault();
+      const id = btn.getAttribute("data-id");
+
+      swal({
+        title: "Yakin ingin menghapus?",
+        icon: "warning",
+        buttons: ["Batal", "Ya, hapus!"],
+        dangerMode: true,
+      }).then(async (willDelete) => {
+        if (willDelete) {
+          const res = await fetch(`/api/submenu/${id}`, {
+            method: "DELETE",
+          });
+
+          const data = await res.json();
+
+          if (data.status === "success") {
+            swal({
+              icon: "success",
+              title: "Terhapus!",
+              text: data.message,
+              timer: 1500,
+              buttons: false,
+            }).then(() => {
+              location.reload();
+            });
+          } else {
+            swal("Gagal!", data.message || "Terjadi kesalahan", "error");
+          }
         }
       });
-
-      // GET EDIT DATA SUB MENU
-      $(document). on('click', '.subMenuEditBtn', function() {
-        const id = $(this).data('id');
-        // console.log(id);
-        $.ajax({
-          url: `/submenu/edit/${id}`,
-          type: "GET",
-          success: function(data) {
-            // console.log(data);
-            $('#nama_submenu').val(data.nama_submenu);
-            $('#link').val(data.link);
-            $('#icon').val(data.icon);
-            $('#id_menu').val(data.id_menu);
-            $('#urutan').val(data.urutan);
-            $('#is_active').val(data.is_active);
-            $('#hidden_id_submenu').val(data.id_submenu);
-          }, error: function() {
-            swal("Error", "Failed to load user data.", "error");
-          }
-        });
-      });
-
-      // UPDATE SUB MENU
-      $(document).on('click', '#subMenuUpdateButton', function() {
-        const id_submenu = $('#hidden_id_submenu').val();
-        console.log(id_submenu);
-        $.ajax({
-          url: `/submenu/update/${id_submenu}`,
-          type: "PUT",
-          data: {
-            nama_submenu: $('#nama_submenu').val(),
-            link: $('#link').val(),
-            icon: $('#icon').val(),
-            id_menu: $('#id_menu').val( ),
-            urutan: $('#urutan').val(),
-            is_active: $('#is_active').val()
-          },
-          success: function(data) {
-            $('#editUserModal').modal('hide');
-            swal("Success", "Menu updated successfully", "success").then(() => {
-              window.location.reload(); // Refresh or update your data table as needed
-            });
-          }, error() {
-            swal("Error", "Could not update menu", "error");
-          }
-        });
-      });
-
-      // DELETE SUB MENU
-      $(document).on('click', '.subMenuDelBtn', function(e) {
-        e.preventDefault();
-        const id_submenu = $(this).data('id');
-        console.log(id_submenu);
-
-        swal({
-          title: "Are you sure?",
-          text: "Do you want to delete this data?",
-          icon: "warning",
-          buttons: {
-            confirm: {
-              text: "Yes, delete it!",
-              className: "btn btn-success",
-            },
-            cancel: {
-              text: "Cancel",
-              visible: true,
-              className: "btn btn-danger",
-            },
-          },
-        }).then((willSubmit) => {
-          if (willSubmit) {
-            // If the user confirms, submit the form using AJAX
-            $.ajax({
-              url: `/submenu/delete/${id_submenu}`, // Use template literal correctly
-              method: 'DELETE',
-              success: function(response) {
-                // Show success message
-                swal({
-                  title: "Deletion Successful",
-                  text: "The data has been successfully deleted.",
-                  icon: "success",
-                  buttons: {
-                    confirm: {
-                      text: "OK",
-                      className: "btn btn-success",
-                    },
-                  },
-                }).then(() => {
-                  // Redirect to /users_list after the user clicks "OK"
-                  window.location.href = "/submenu/list";
-                });
-              },
-              error: function(xhr, status, error) {
-                // Show SweetAlert error if deletion fails
-                swal({
-                  title: "Failed to delete data",
-                  text: "An error occurred while deleting the data. Please try again.",
-                  icon: "error",
-                  buttons: {
-                    confirm: {
-                      text: "OK",
-                      className: "btn btn-danger",
-                    },
-                  },
-                });
-              }
-            });
-          } else {
-            swal.close();
-          }
-        });
-
-      });
-
-});
+    });
+  });
+});  
