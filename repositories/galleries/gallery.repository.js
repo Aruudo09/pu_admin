@@ -1,4 +1,5 @@
-const { Gallery } = require("../../models");
+const { Model } = require("sequelize");
+const { Gallery, GalleryCategory } = require("../../models");
 
 class GalleryRepository {
     async getAllGallery() {
@@ -11,6 +12,21 @@ class GalleryRepository {
 
     async createGallery(galleryData) {
         return await Gallery.create(galleryData);
+    }
+
+    async getGalleryByCategory(slug) {
+        const include = {
+            model: GalleryCategory,
+            as: "category"
+        };
+
+        if (slug && slug !== "all") {
+            include.where = { slug };
+        }
+
+        return await Gallery.findAll({
+            include,
+        });
     }
 
     async updateGallery(id, galleryData) {

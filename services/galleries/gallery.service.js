@@ -17,6 +17,14 @@ class Gallery {
         return gallery;
     }
 
+    async getGalleryByCategory(slug) {
+        const gallery = await GalleryRepository.getGalleryByCategory(slug);
+        if (gallery.length === 0) {
+            throw new Error("No gallery found");
+        }
+        return gallery;
+    }
+
     async createGallery(galleryData) {
         const requiredFields = ["title", "image_url", "description", "category_id"];
         if (!requiredFields.every(field => galleryData[field])) {

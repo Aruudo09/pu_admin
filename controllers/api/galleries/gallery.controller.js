@@ -20,6 +20,18 @@ class GalleryController {
     }
   }
 
+  async getGalleryByCategory(req, res) {
+    try {
+      const slug = req.query.category;
+  
+      const galleries = await galleryService.getGalleryByCategory(slug);
+      return response.success(res, "Gallery fetched", galleries);
+    } catch (error) {
+      return response.error(res, error.message);
+    }
+  }
+  
+
   async createGallery(req, res) {
     try {
       const gallery = await galleryService.createGallery(req.body);

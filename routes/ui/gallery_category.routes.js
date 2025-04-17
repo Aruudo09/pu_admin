@@ -1,20 +1,21 @@
 const express = require("express");
 const router = express.Router();
 const { auth, loadSidebar } = require("../../middleware");
-const GalleryService = require("../../services/galleries/gallery.service");
+const GallerycategoryService = require("../../services/galleries/galleryCategory.service");
+const galleryService = require("../../services/galleries/gallery.service");
 
 // TAMPILAN LIST
 router.get("/", auth.ensureAuth, loadSidebar, async (req, res) => {
   try {
-    const galleries = await GalleryService.getAllGallery();
+    const galleryCategory = await GallerycategoryService.getAllGalleryCategory();
 
     res.render("home", {
-      link: "galleries/gallery_list",
-      jslink: "javascripts/gallery_javascript.js",
+      link: "galleries/galleryCategory_list",
+      jslink: "javascripts/galleryCategory_javascript.js",
       user: req.session.user,
       username: req.session.user?.username || "Guest",
       fullname: req.session.user?.fullname || "Guest",
-      galleries,
+      galleryCategory
     });
   } catch (error) {
     console.error("❌ Error loading gallery:", error.message);
