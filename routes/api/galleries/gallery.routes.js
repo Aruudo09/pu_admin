@@ -5,6 +5,7 @@ const router = express.Router();
 
 router.get("/", galleryController.getAllGallery);
 router.get("/by-category", galleryController.getGalleryByCategory);
+router.get("/datatables", galleryController.getAllGalleryDatatables);
 router.get("/:id", galleryController.getGalleryById);
 router.post("/", galleryController.createGallery);
 router.put("/:id", galleryController.updateGallery);

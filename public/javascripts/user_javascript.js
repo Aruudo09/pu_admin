@@ -12,7 +12,7 @@ $(document).ready(function() {
   
     // Tentukan URL dan method berdasarkan id
     const isUpdate = id !== "";
-    const url = isUpdate ? `/api/user/${id}` : `/api/user/gallery`;
+    const url = isUpdate ? `/api/user/${id}` : `/api/user`;
     const method = isUpdate ? "PUT" : "POST";
 
       try {

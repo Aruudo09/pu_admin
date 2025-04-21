@@ -20,6 +20,9 @@ class GalleryRepository {
           ? [[columns[order[0].column].data, order[0].dir]]
           : [['created_at', 'DESC']];
       
+          console.log({ where, sort, offset, limit });
+
+
         const result = await Gallery.findAndCountAll({
           where,
           order: sort,

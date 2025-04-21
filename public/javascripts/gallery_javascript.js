@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", () => {
     serverSide: true,
     responsive: true,
     ajax: {
-      url: '/api/galleries',
+      url: '/api/galleries/datatables',
       type: 'GET'
     },
     columns: [

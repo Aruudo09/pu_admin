@@ -11,14 +11,14 @@ class GalleryController {
     }
   }
 
-  // async getAllGallery(req, res) {
-  //   try {
-  //     const result = await galleryService.getAllGallery(req.query);
-  //     return res.json(result); // langsung sesuai format DataTable
-  //   } catch (error) {
-  //     return res.status(500).json({ error: error.message });
-  //   }
-  // }
+  async getAllGalleryDatatables(req, res) {
+    try {
+      const result = await galleryService.getAllGalleryDatatables(req.query);
+      return res.json(result); // langsung sesuai format DataTable
+    } catch (error) {
+      return res.status(500).json({ error: error.message });
+    }
+  }
   
 
   async getGalleryById(req, res) {

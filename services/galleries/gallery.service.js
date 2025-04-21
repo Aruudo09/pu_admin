@@ -9,24 +9,41 @@ class Gallery {
         return gallery;
     }
 
-    // async getAllGallery(query) {
-    //     const { draw, start, length, search, order, columns } = query;
+    async getAllGalleryDatatables({ draw, start, length, search, order, columns }) {
+        const offset = parseInt(start) || 0;
+        const limit = parseInt(length) || 10;
+        const searchValue = search?.value || '';
       
-    //     const { count, rows } = await GalleryRepository.getPaginatedGalleries({
-    //       start: parseInt(start),
-    //       length: parseInt(length),
-    //       search: search?.value || '',
-    //       order,
-    //       columns
-    //     });
+        // Tentukan kolom dan arah sorting
+        let orderClause = [['created_at', 'DESC']]; // default order
+        if (order && order.length > 0) {
+          const columnIdx = parseInt(order[0].column);
+          const columnName = columns[columnIdx]?.data;
+          const dir = order[0].dir || 'asc';
+          if (columnName) {
+            orderClause = [[columnName, dir]];
+          }
+        }
+
+        console.log({ draw, start, length, search, order, columns });
       
-    //     return {
-    //       draw: parseInt(draw),
-    //       recordsTotal: count,
-    //       recordsFiltered: count,
-    //       data: rows
-    //     };
-    //   }
+        // Panggil repository untuk paginated result
+        const { count, rows } = await GalleryRepository.getPaginatedGalleries({
+            start: offset,
+            length: limit,
+            search: searchValue,
+            order,
+            columns
+          });
+          
+      
+        return {
+          draw: parseInt(draw),
+          recordsTotal: count,
+          recordsFiltered: count,
+          data: rows
+        };
+      }      
       
 
     async getGalleryById(id) {
