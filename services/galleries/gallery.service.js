@@ -10,41 +10,35 @@ class Gallery {
     }
 
     async getAllGalleryDatatables({ draw, start, length, search, order, columns }) {
-        const offset = parseInt(start) || 0;
-        const limit = parseInt(length) || 10;
+        const offset = parseInt(start, 10) || 0;
+        const limit = parseInt(length, 10) || 10;
         const searchValue = search?.value || '';
-      
-        // Tentukan kolom dan arah sorting
-        let orderClause = [['created_at', 'DESC']]; // default order
+
+        let orderClause = [['created_at', 'DESC']];
         if (order && order.length > 0) {
-          const columnIdx = parseInt(order[0].column);
-          const columnName = columns[columnIdx]?.data;
-          const dir = order[0].dir || 'asc';
-          if (columnName) {
-            orderClause = [[columnName, dir]];
-          }
+            const columnIdx = parseInt(order[0].column, 10);
+            const columnName = columns[columnIdx]?.data;
+            const dir = order[0].dir || 'asc';
+            if (columnName) {
+                orderClause = [[columnName, dir]];
+            }
         }
 
-        console.log({ draw, start, length, search, order, columns });
-      
-        // Panggil repository untuk paginated result
         const { count, rows } = await GalleryRepository.getPaginatedGalleries({
             start: offset,
             length: limit,
             search: searchValue,
             order,
             columns
-          });
-          
-      
+        });
+
         return {
-          draw: parseInt(draw),
-          recordsTotal: count,
-          recordsFiltered: count,
-          data: rows
+            draw: parseInt(draw, 10),
+            recordsTotal: count,
+            recordsFiltered: count,
+            data: rows
         };
-      }      
-      
+    }      
 
     async getGalleryById(id) {
         const gallery = await GalleryRepository.getGalleryById(id);

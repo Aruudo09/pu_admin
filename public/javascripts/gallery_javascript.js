@@ -1,34 +1,60 @@
 document.addEventListener("DOMContentLoaded", () => {
 
-  $('#galleries').DataTable({
-    processing: true,
-    serverSide: true,
-    responsive: true,
-    ajax: {
-      url: '/api/galleries/datatables',
-      type: 'GET'
-    },
-    columns: [
-      { data: 'title' },
-      { data: 'image_url' },
-      { data: 'description' },
-      { data: 'category_id' },
-      { data: 'created_at' },
-      {
-        data: 'id',
-        render: function (data) {
-          return `
-            <a href="#" class="btn btn-sm btn-primary galleryEdit" data-id="${data}">
-              <i class="fa fa-edit"></i>
-            </a>
-            <a href="#" class="btn btn-sm btn-danger galleryDelete" data-id="${data}">
-              <i class="fa fa-times"></i>
-            </a>
-          `;
+
+    $('#galleries').DataTable({
+      processing: true,
+      serverSide: true,
+      responsive: false,
+      scrollX: false,
+      autowidth: true,
+      ajax: {
+        url: '/api/galleries/gallery/datatables', // Backend endpoint
+        type: 'GET',
+        dataSrc: function (json) {
+          console.log("DataTables response:", json); // Debugging log
+          return json.data; // Extract the data array
         }
+      },
+      columns: [
+        { data: 'title' },
+        { data: 'image_url'},
+        { data: 'description' },
+        { data: 'category_id' },
+        { data: 'created_at' },
+        {
+          data: 'id',
+          render: function (data) {
+            return `
+            <div class="d-flex gap-2 justify-content-center">
+              <a href="#" class="btn btn-sm btn-primary galleryEdit" data-id="${data}">
+                <i class="fa fa-edit"></i>
+              </a>
+              <a href="#" class="btn btn-sm btn-danger galleryDelete" data-id="${data}">
+                <i class="fa fa-times"></i>
+              </a>
+            </div>
+            `;
+          }
+        }
+      ],
+      columnDefs: [
+        // { responsivePriority: 1, targets: 0 }, // Title
+        // { responsivePriority: 2, targets: 1 }, // Image URL
+        // { responsivePriority: 3, targets: 5 },  // Action
+        // { targets: 0, width: '20%' }, // Set width for the first column (Title)
+        // { targets: 1, width: '15%' }, // Set width for the second column (Image URL)
+        // { targets: 2, width: '25%' }, // Set width for the third column (Description)
+        // { targets: 3, width: '40%' }, // Set width for the fourth column (Category ID)
+        // { targets: 4, width: '15%' }, // Set width for the fifth column (Created At)
+        // { targets: 5, width: '30%' }  // Set width for the sixth column (Action)
+      ],
+      drawCallback: function () {
+        // Force redraw untuk sync header & body
+        $($.fn.dataTable.tables(true)).DataTable()
+          .columns.adjust();
       }
-    ]
-  });
+    });
+  
   
 
     // CREATE OR UPDATE
@@ -72,25 +98,26 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   
     // MENGISI VALUE FORM (EDIT)
-    document.querySelectorAll(".galleryEdit").forEach((btn) => {
-      btn.addEventListener("click", async (e) => {
+    document.addEventListener("click", async (e) => {
+      if (e.target.closest(".galleryEdit")) {
         e.preventDefault();
+        const btn = e.target.closest(".galleryEdit");
         const id = btn.getAttribute("data-id");
-  
+    
         try {
           const res = await fetch(`/api/galleries/gallery/${id}`);
           const data = await res.json();
           console.log(data);
-  
+    
           if (data.status === "success") {
             const gallery = data.data;
-  
+    
             document.getElementById("hidden_id").value = gallery.id;
             document.getElementById("title").value = gallery.title;
             document.getElementById("image_url").value = gallery.image_url;
             document.getElementById("description").value = gallery.description;
             document.getElementById("category_id").value = gallery.category_id;
-  
+    
             const modal = new bootstrap.Modal(document.getElementById("galleryFormModal"));
             modal.show();
           } else {
@@ -99,7 +126,7 @@ document.addEventListener("DOMContentLoaded", () => {
         } catch (err) {
           swal("Error", "Gagal menghubungi server", "error");
         }
-      });
+      }
     });
 
     // RESET SAAT MENUTUP MODAL
@@ -110,11 +137,12 @@ document.addEventListener("DOMContentLoaded", () => {
       
   
     // DELETE
-    document.querySelectorAll(".galleryDelete").forEach((btn) => {
-      btn.addEventListener("click", (e) => {
+    document.addEventListener("click", (e) => {
+      if (e.target.closest(".galleryDelete")) {
         e.preventDefault();
+        const btn = e.target.closest(".galleryDelete");
         const id = btn.getAttribute("data-id");
-  
+    
         swal({
           title: "Yakin ingin menghapus?",
           icon: "warning",
@@ -122,27 +150,31 @@ document.addEventListener("DOMContentLoaded", () => {
           dangerMode: true,
         }).then(async (willDelete) => {
           if (willDelete) {
-            const res = await fetch(`/api/galleries/gallery/${id}`, {
-              method: "DELETE",
-            });
-  
-            const data = await res.json();
-  
-            if (data.status === "success") {
-              swal({
-                icon: "success",
-                title: "Terhapus!",
-                text: data.message,
-                timer: 1500,
-                buttons: false,
-              }).then(() => {
-                location.reload();
+            try {
+              const res = await fetch(`/api/galleries/gallery/${id}`, {
+                method: "DELETE",
               });
-            } else {
-              swal("Gagal!", data.message || "Terjadi kesalahan", "error");
+    
+              const data = await res.json();
+    
+              if (data.status === "success") {
+                swal({
+                  icon: "success",
+                  title: "Terhapus!",
+                  text: data.message,
+                  timer: 1500,
+                  buttons: false,
+                }).then(() => {
+                  location.reload();
+                });
+              } else {
+                swal("Gagal!", data.message || "Terjadi kesalahan", "error");
+              }
+            } catch (err) {
+              swal("Error!", "Gagal menghubungi server", "error");
             }
           }
         });
-      });
+      }
     });
-  });  
+  });
