@@ -9,6 +9,26 @@ class Gallery {
         return gallery;
     }
 
+    // async getAllGallery(query) {
+    //     const { draw, start, length, search, order, columns } = query;
+      
+    //     const { count, rows } = await GalleryRepository.getPaginatedGalleries({
+    //       start: parseInt(start),
+    //       length: parseInt(length),
+    //       search: search?.value || '',
+    //       order,
+    //       columns
+    //     });
+      
+    //     return {
+    //       draw: parseInt(draw),
+    //       recordsTotal: count,
+    //       recordsFiltered: count,
+    //       data: rows
+    //     };
+    //   }
+      
+
     async getGalleryById(id) {
         const gallery = await GalleryRepository.getGalleryById(id);
         if (!gallery) {

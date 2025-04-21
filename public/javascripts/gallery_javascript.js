@@ -1,5 +1,36 @@
 document.addEventListener("DOMContentLoaded", () => {
 
+  $('#galleries').DataTable({
+    processing: true,
+    serverSide: true,
+    responsive: true,
+    ajax: {
+      url: '/api/galleries',
+      type: 'GET'
+    },
+    columns: [
+      { data: 'title' },
+      { data: 'image_url' },
+      { data: 'description' },
+      { data: 'category_id' },
+      { data: 'created_at' },
+      {
+        data: 'id',
+        render: function (data) {
+          return `
+            <a href="#" class="btn btn-sm btn-primary galleryEdit" data-id="${data}">
+              <i class="fa fa-edit"></i>
+            </a>
+            <a href="#" class="btn btn-sm btn-danger galleryDelete" data-id="${data}">
+              <i class="fa fa-times"></i>
+            </a>
+          `;
+        }
+      }
+    ]
+  });
+  
+
     // CREATE OR UPDATE
     document.getElementById("submitGalleryBtn").addEventListener("click", async () => {
       const id = document.getElementById("hidden_id").value;

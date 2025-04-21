@@ -43,7 +43,7 @@
 
               <div class="table-responsive">
                 <table
-                  id="add-row"
+                  id="galleries"
                   class="display table table-striped table-hover"
                 >
                   <thead>
@@ -67,36 +67,7 @@
                     </tr>
                   </tfoot>
                   <tbody>
-                    <% galleries.forEach(function(gallery) {%>
-                        <tr>
-                            <td><%= gallery.title %></td>
-                            <td><%= gallery.image_url %></td>
-                            <td><%= gallery.description %></td>
-                            <td><%= gallery.category_id %></td>
-                            <td><%= gallery.created_at %></td>
-                            <td>
-                                <div class="form-button-action">
-                                  <a
-                                  href="#"
-                                  data-id="<%= gallery.id %>"
-                                  class="btn btn-link btn-primary btn-lg galleryEdit"
-                                >                                
-                                    <i class="fa fa-edit"></i>
-                                </a>
-                                <a
-                                    type="button"
-                                    data-bs-toggle="tooltip"
-                                    data-id="<%= gallery.id %>"
-                                    title=""
-                                    class="btn btn-link btn-danger btn-lg galleryDelete"
-                                    data-original-title="Remove"
-                                  >
-                                    <i class="fa fa-times"></i>
-                                </a>
-                                </div>
-                              </td>
-                        </tr>
-                    <% } ); %>
+                    
                   </tbody>
                 </table>
               </div>

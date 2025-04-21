@@ -6,6 +6,31 @@ class GalleryRepository {
         return await Gallery.findAll();
     }
 
+    async getPaginatedGalleries({ start, length, search, order, columns }) {
+        const where = search
+          ? {
+              [Op.or]: [
+                { title: { [Op.iLike]: `%${search}%` } },
+                { description: { [Op.iLike]: `%${search}%` } }
+              ]
+            }
+          : {};
+      
+        const sort = order && order.length > 0
+          ? [[columns[order[0].column].data, order[0].dir]]
+          : [['created_at', 'DESC']];
+      
+        const result = await Gallery.findAndCountAll({
+          where,
+          order: sort,
+          offset: start,
+          limit: length
+        });
+      
+        return result;
+      }
+      
+
     async getGalleryById(id) {
         return await Gallery.findByPk(id);
     }
