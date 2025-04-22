@@ -1,6 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
 
-
     $('#galleries').DataTable({
       processing: true,
       serverSide: true,
@@ -107,7 +106,6 @@ document.addEventListener("DOMContentLoaded", () => {
         try {
           const res = await fetch(`/api/galleries/gallery/${id}`);
           const data = await res.json();
-          console.log(data);
     
           if (data.status === "success") {
             const gallery = data.data;

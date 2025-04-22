@@ -11,6 +11,15 @@ class UserController {
     }
   }
 
+  async getAllUsersDatatables(req, res) {
+    try {
+      const result = await userService.getAllUsersDatatables(req.query);
+      return res.json(result); // langsung sesuai format DataTable
+    } catch (error) {
+      return res.status(500).json({ error: error.message });
+    }
+  }
+
   async getUserById(req, res) {
     try {
       const user = await userService.getUserById(req.params.id);
