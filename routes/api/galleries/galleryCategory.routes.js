@@ -4,6 +4,7 @@ const galleryCategoryController = require("../../../controllers/api/galleries/ga
 const router = express.Router();
 
 router.get("/", galleryCategoryController.getAllGalleryCategory);
+router.get("/datatables", galleryCategoryController.getAllGalleryCategoryDatatables);
 router.get("/:id", galleryCategoryController.getGalleryCategoryById);
 router.post("/", galleryCategoryController.createGalleryCategory);
 router.put("/:id", galleryCategoryController.updateGalleryCategory);

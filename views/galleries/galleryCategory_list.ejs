@@ -43,7 +43,7 @@
 
               <div class="table-responsive">
                 <table
-                  id="add-row"
+                  id="galleryCategories"
                   class="display table table-striped table-hover"
                 >
                   <thead>
@@ -63,34 +63,7 @@
                     </tr>
                   </tfoot>
                   <tbody>
-                    <% galleryCategory.forEach(function(category) {%>
-                        <tr>
-                            <td><%= category.name %></td>
-                            <td><%= category.slug %></td>
-                            <td><%= category.created_at %></td>
-                            <td>
-                                <div class="form-button-action">
-                                  <a
-                                  href="#"
-                                  data-id="<%= category.id %>"
-                                  class="btn btn-link btn-primary btn-lg galleryCategoryEdit"
-                                >                                
-                                    <i class="fa fa-edit"></i>
-                                </a>
-                                <a
-                                    type="button"
-                                    data-bs-toggle="tooltip"
-                                    data-id="<%= category.id %>"
-                                    title=""
-                                    class="btn btn-link btn-danger btn-lg galleryCategoryDelete"
-                                    data-original-title="Remove"
-                                  >
-                                    <i class="fa fa-times"></i>
-                                </a>
-                                </div>
-                              </td>
-                        </tr>
-                    <% } ); %>
+                   
                   </tbody>
                 </table>
               </div>

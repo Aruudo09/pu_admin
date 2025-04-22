@@ -1,5 +1,56 @@
 $(document).ready(function() {
 
+  $("#userTable").DataTable({
+    processing: true,
+    serverSide: true,
+    responsive: false,
+    scrollX: false,
+    autowidth: true,
+    ajax: {
+      url: "/api/user/datatables", // Backend endpoint
+      type: "GET",
+      dataSrc: function (json) {
+        console.log("DataTables response:", json); // Debugging log
+        return json.data; // Extract the data array
+      },
+    },
+    columns: [
+      { data: "fullname" },
+      { data: "username" },
+      { data: "id_level" },
+      {
+        data: "id",
+        render: function (data) {
+          return `
+            <div class="d-flex gap-2 justify-content-center">
+              <a href="#" class="btn btn-sm btn-primary userEdit" data-id="${data}">
+                <i class="fa fa-edit"></i>
+              </a>
+              <a href="#" class="btn btn-sm btn-danger userDelete" data-id="${data}">
+                <i class="fa fa-times"></i>
+              </a>
+            </div>
+            `;
+        },
+      },
+    ],
+    columnDefs: [
+      // { responsivePriority: 1, targets: 0 }, // Title
+      // { responsivePriority: 2, targets: 1 }, // Image URL
+      // { responsivePriority: 3, targets: 5 },  // Action
+      // { targets: 0, width: '20%' }, // Set width for the first column (Title)
+      // { targets: 1, width: '15%' }, // Set width for the second column (Image URL)
+      // { targets: 2, width: '25%' }, // Set width for the third column (Description)
+      // { targets: 3, width: '40%' }, // Set width for the fourth column (Category ID)
+      // { targets: 4, width: '15%' }, // Set width for the fifth column (Created At)
+      // { targets: 5, width: '30%' }  // Set width for the sixth column (Action)
+    ],
+    drawCallback: function () {
+      // Force redraw untuk sync header & body
+      $($.fn.dataTable.tables(true)).DataTable().columns.adjust();
+    },
+  });
+
     // CREATE OR UPDATE
     document.getElementById("submitUserBtn").addEventListener("click", async () => {
       const id = document.getElementById("hidden_id_user").value;
@@ -45,36 +96,37 @@ $(document).ready(function() {
     });
 
       // MENGISI VALUE FORM (EDIT)
-    document.querySelectorAll(".userEdit").forEach((btn) => {
-      btn.addEventListener("click", async (e) => {
-        e.preventDefault();
-        const id = btn.getAttribute("data-id");
-  
-        try {
-          const res = await fetch(`/api/user/${id}`);
-          const data = await res.json();
-          console.log(data);
-  
-          if (data.status === "success") {
-            const user = data.data;
-  
-            document.getElementById("hidden_id_user").value = user.id;
-            document.getElementById("fullname").value = user.fullname;
-            document.getElementById("username").value = user.username;
-            document.getElementById("password").value = user.password;
-            document.getElementById("id_level").value = user.id_level;
-            document.getElementById("is_active").value = user.is_active;
-            document.getElementById("app").value = user.app;
-  
-            const modal = new bootstrap.Modal(document.getElementById("userFormModal"));
-            modal.show();
-          } else {
-            swal("Gagal", "User tidak ditemukan", "error");
-          }
-        } catch (err) {
-          swal("Error", "Gagal menghubungi server", "error");
+    document.getElementById("userTable").addEventListener("click", async (e) => {
+      if (e.target.closest(".userEdit")) {
+      e.preventDefault();
+      const btn = e.target.closest(".userEdit");
+      const id = btn.getAttribute("data-id");
+    
+      try {
+        const res = await fetch(`/api/user/${id}`);
+        const data = await res.json();
+        console.log(data);
+    
+        if (data.status === "success") {
+        const user = data.data;
+    
+        document.getElementById("hidden_id_user").value = user.id;
+        document.getElementById("fullname").value = user.fullname;
+        document.getElementById("username").value = user.username;
+        document.getElementById("password").value = user.password;
+        document.getElementById("id_level").value = user.id_level;
+        document.getElementById("is_active").value = user.is_active;
+        document.getElementById("app").value = user.app;
+    
+        const modal = new bootstrap.Modal(document.getElementById("userFormModal"));
+        modal.show();
+        } else {
+        swal("Gagal", "User tidak ditemukan", "error");
         }
-      });
+      } catch (err) {
+        swal("Error", "Gagal menghubungi server", "error");
+      }
+      }
     });
 
     // RESET SAAT MENUTUP MODAL
@@ -84,40 +136,45 @@ $(document).ready(function() {
     });
 
     // DELETE
-    document.querySelectorAll(".userDelete").forEach((btn) => {
-      btn.addEventListener("click", (e) => {
-        e.preventDefault();
-        const id = btn.getAttribute("data-id");
-  
-        swal({
-          title: "Yakin ingin menghapus?",
-          icon: "warning",
-          buttons: ["Batal", "Ya, hapus!"],
-          dangerMode: true,
-        }).then(async (willDelete) => {
-          if (willDelete) {
-            const res = await fetch(`/api/user/${id}`, {
-              method: "DELETE",
-            });
-  
-            const data = await res.json();
-  
-            if (data.status === "success") {
-              swal({
-                icon: "success",
-                title: "Terhapus!",
-                text: data.message,
-                timer: 1500,
-                buttons: false,
-              }).then(() => {
-                location.reload();
-              });
-            } else {
-              swal("Gagal!", data.message || "Terjadi kesalahan", "error");
-            }
+    document.getElementById("userTable").addEventListener("click", async (e) => {
+      if (e.target.closest(".userDelete")) {
+      e.preventDefault();
+      const btn = e.target.closest(".userDelete");
+      const id = btn.getAttribute("data-id");
+    
+      swal({
+        title: "Yakin ingin menghapus?",
+        icon: "warning",
+        buttons: ["Batal", "Ya, hapus!"],
+        dangerMode: true,
+      }).then(async (willDelete) => {
+        if (willDelete) {
+        try {
+          const res = await fetch(`/api/user/${id}`, {
+          method: "DELETE",
+          });
+    
+          const data = await res.json();
+    
+          if (data.status === "success") {
+          swal({
+            icon: "success",
+            title: "Terhapus!",
+            text: data.message,
+            timer: 1500,
+            buttons: false,
+          }).then(() => {
+            location.reload();
+          });
+          } else {
+          swal("Gagal!", data.message || "Terjadi kesalahan", "error");
           }
-        });
+        } catch (err) {
+          swal("Error!", "Gagal menghubungi server", "error");
+        }
+        }
       });
+      }
     });
 
 });
