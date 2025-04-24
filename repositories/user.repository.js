@@ -7,16 +7,16 @@ class UserRepository {
   }
 
   async getPaginatedUsers({ start, length, search, order, columns }) {
-    const where = search
-      ? {
-          [Op.or]: [
-            { username: { [Op.like]: `%${search}%` } },
-            { fullname: { [Op.like]: `%${search}%` } },
-            { id_level: { [Op.like]: `%${search}%` } },
-            { createdAt: { [Op.like]: `%${search}%` } },
-          ],
-        }
-      : {};
+    const where = {
+      ...(search && {
+        [Op.or]: [
+          { fullname: { [Op.like]: `%${search}%` } },
+          { username: { [Op.like]: `%${search}%` } },
+          { id_level: { [Op.like]: `%${search}%` } },
+        ],
+      }),
+      // Add any other filters you need here
+    };
 
     const sort =
       order && order.length > 0

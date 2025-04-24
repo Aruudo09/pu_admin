@@ -13,10 +13,26 @@ class GalleryCategoryService {
 
   async getAllGalleryCategoryDatatables(req, res) {
     try {
+      const { akses } = res.locals;
+
+      if (akses.view_level !== 'Y') {
+        return res.status(403).json({ error: "Akses ditolak" });
+      }
+
       const result = await galleryCategoryService.getAllGalleryCategoryDatatables(req.query);
-      return res.json(result); // langsung sesuai format DataTable
+
+      result.data = result.data.map(row => ({
+        ...row.get({ plain: true }),
+        akses: {
+          edit: akses.edit_level === 'Y',
+          delete: akses.delete_level === 'Y'
+        }
+      }));
+
+      return response.datatables(res, result);
     } catch (error) {
-      return res.status(500).json({ error: error.message });
+      console.error("Error getAllGalleryCategoryDatatables:", error);
+      return response.error(res, error.message);
     }
   }
 

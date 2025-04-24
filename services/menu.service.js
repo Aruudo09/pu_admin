@@ -9,6 +9,26 @@ class MenuService {
     return menu;
   }
 
+  async getAllMenuDatatables({ draw, start, length, search, order, columns }) {
+    const searchValue = search?.value || "";
+
+    const { count, rows } = await MenuRepository.getPaginatedMenu({
+      start: parseInt(start, 10) || 0,
+      length: parseInt(length, 10) || 10,
+      search: searchValue,
+      order,
+      columns
+    });
+
+    return {
+      draw: parseInt(draw, 10),
+      recordsTotal: count,
+      recordsFiltered: count,
+      data: rows
+    };
+  }
+
+
   async getMenuById(id_menu) {
     const menu = await MenuRepository.getMenuById(id_menu);
     if (!menu) {

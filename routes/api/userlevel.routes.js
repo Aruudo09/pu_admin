@@ -1,9 +1,11 @@
 const express = require("express");
 const userlevelController = require("../../controllers/api/userlevel.controller");
+const { injectUser } = require("../../middleware/");
 
 const router = express.Router();
 
 router.get("/", userlevelController.getAllUserlevel);
+router.get("/datatables", injectUser, userlevelController.getAllUserlevelDatatables);
 router.get("/:id", userlevelController.getUserlevelById);
 router.post("/", userlevelController.createUserlevel);
 router.put("/:id", userlevelController.updateUserlevel);

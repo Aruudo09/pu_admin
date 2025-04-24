@@ -1,3 +1,5 @@
+const { Op } = require("sequelize");
+const { Userlevel } = require("../models");
 const UserlevelRepository = require("../repositories/userlevel.repository");
 
 class UserlevelService {
@@ -7,6 +9,26 @@ class UserlevelService {
       throw new Error("No userlevel found");
     }
     return userlevel;
+  }
+
+  async getAllUserlevelDatatables({ draw, start, length, search, order, columns, id_level }) {
+    const searchValue = search?.value || "";
+  
+    const { count, rows } = await UserlevelRepository.getPaginatedUserlevels({
+      start: parseInt(start, 10) || 0,
+      length: parseInt(length, 10) || 10,
+      search: searchValue,
+      order,
+      columns,
+      id_level
+    });
+  
+    return {
+      draw: parseInt(draw, 10) || 0,
+      recordsTotal: count,
+      recordsFiltered: count,
+      data: rows,
+    };
   }
 
   async getUserlevelById(id_level) {

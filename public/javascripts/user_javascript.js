@@ -15,22 +15,30 @@ $(document).ready(function() {
       },
     },
     columns: [
-      { data: "fullname" },
-      { data: "username" },
-      { data: "id_level" },
+      { data: "fullname", title: "Nama Lengkap" },
+      { data: "username", title: "Username" },
+      { data: "id_level", title: "ID Level" },
       {
         data: "id",
-        render: function (data) {
-          return `
-            <div class="d-flex gap-2 justify-content-center">
-              <a href="#" class="btn btn-sm btn-primary userEdit" data-id="${data}">
+        render: function (data, type, row) {
+          console.log("Data ID:", row); // Debugging log
+          let buttons = `<div class="d-flex gap-2 justify-content-center">`;
+
+          if (row.akses && row.akses.edit) {
+            buttons += `
+              <a href="#" class="btn btn-sm btn-primary userEdit" data-id="${row.id}">
                 <i class="fa fa-edit"></i>
-              </a>
-              <a href="#" class="btn btn-sm btn-danger userDelete" data-id="${data}">
+              </a>`;
+          }
+          if (row.akses && row.akses.delete) {
+            buttons += `
+              <a href="#" class="btn btn-sm btn-danger userDelete" data-id="${row.id}">
                 <i class="fa fa-times"></i>
-              </a>
-            </div>
-            `;
+              </a>`;
+          }
+
+          buttons += `</div>`;
+          return buttons;
         },
       },
     ],

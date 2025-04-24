@@ -16,22 +16,28 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       },
       columns: [
-        { data: 'name' },
-        { data: 'slug' },
-        { data: 'created_at' },
+        { data: 'name', title: 'Nama Kategori' },
+        { data: 'slug', title: 'Slug' },
+        { data: 'created_at', title: 'Dibuat Pada' },
         {
           data: 'id',
-          render: function (data) {
-            return `
-            <div class="d-flex gap-2 justify-content-center">
-              <a href="#" class="btn btn-sm btn-primary galleryCategoryEdit" data-id="${data}">
-                <i class="fa fa-edit"></i>
-              </a>
-              <a href="#" class="btn btn-sm btn-danger galleryCategoryDelete" data-id="${data}">
-                <i class="fa fa-times"></i>
-              </a>
-            </div>
-            `;
+          render: function (data, type, row) {
+            let buttons = `<div class="d-flex gap-2 justify-content-center">`;
+
+            if (row.akses && row.akses.edit) {
+              buttons += `
+                <a href="#" class="btn btn-sm btn-primary galleryCategoryEdit" data-id="${row.id}">
+                  <i class="fa fa-edit"></i>
+                </a>`;
+            }
+            if (row.akses && row.akses.delete) {
+              buttons += `
+                <a href="#" class="btn btn-sm btn-danger galleryCategoryDelete" data-id="${row.id}">
+                  <i class="fa fa-times"></i>
+                </a>`;
+            }
+            buttons += `</div>`;
+            return buttons;
           }
         }
       ],

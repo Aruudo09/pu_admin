@@ -27,6 +27,7 @@ class AuthController {
         id: user.id,
         username: user.username,
         fullname: user.fullname, // ini penting kalau kamu mau pakai fullname
+        id_level: user.id_level,
       };
       return res.redirect("/dashboard");
     } catch (error) {

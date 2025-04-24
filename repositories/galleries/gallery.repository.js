@@ -6,18 +6,19 @@ class GalleryRepository {
         return await Gallery.findAll();
     }
 
-    async getPaginatedGalleries({ start, length, search, order, columns }) {
-        const where = search
-            ? {
+    async getPaginatedGallery({ start, length, search, order, columns }) {
+        const where = {
+            ...(search && {
                 [Op.or]: [
-                    { title: { [Op.like]: `%${search}%` } }, // Use Op.like for MySQL
-                    { description: { [Op.like]: `%${search}%` } }, // Use Op.like for MySQL
-                    { image_url: { [Op.like]: `%${search}%` } }, // Use Op.like for MySQL
-                    { category_id: { [Op.like]: `%${search}%` } }, // Use Op.like for MySQL
-                    { created_at: { [Op.like]: `%${search}%` } } // Use Op.like for MySQL
+                    { title: { [Op.like]: `%${search}%` } },
+                    { image_url: { [Op.like]: `%${search}%` } },
+                    { description: { [Op.like]: `%${search}%` } },
+                    { category_id: { [Op.like]: `%${search}%` } },
+                    { created_at: { [Op.like]: `%${search}%` } }                
                 ]
-            }
-            : {};
+            }),
+            // Add any other filters you need here
+        }
 
         const sort = order && order.length > 0
             ? [[columns[order[0].column].data, order[0].dir]]

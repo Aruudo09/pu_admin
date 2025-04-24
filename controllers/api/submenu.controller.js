@@ -11,6 +11,31 @@ class SubmenuController {
     }
   }
 
+  async getAllSubmenuDatatables(req, res) {
+    try {
+      const { akses } = res.locals;
+
+      if (akses.view_level !== 'Y') {
+        return res.status(403).json({ error: "Akses ditolak" });
+      }
+
+      const result = await submenuService.getAllSubmenuDatatables(req.query);
+
+      result.data = result.data.map(row => ({
+        ...row.get({ plain: true }),
+        akses: {
+          edit: akses.edit_level === 'Y',
+          delete: akses.delete_level === 'Y'
+        }
+      }));
+
+      return response.datatables(res, result);
+    } catch (error) {
+      console.error("Error getAllSubmenuDatatables:", error);
+      return response.error(res, error.message);
+    } 
+  }
+
   async getSubmenuById(req, res) {
     try {
       const submenu = await submenuService.getSubmenuById(req.params.id);

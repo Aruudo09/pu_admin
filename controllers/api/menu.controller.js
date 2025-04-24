@@ -11,6 +11,33 @@ class MenuController {
     }
   }
 
+  async getAllMenuDatatables(req, res) {
+    try {
+      const { akses } = res.locals;
+
+      console.log("akses", akses);
+        
+        if (akses.view_level !== 'Y') {
+          return res.status(403).json({ error: "Akses ditolak" });
+        }
+  
+        const result = await menuService.getAllMenuDatatables(req.query);
+  
+        result.data = result.data.map(row => ({
+          ...row.get({ plain: true }),
+          akses: {
+            edit: akses.edit_level === 'Y',
+            delete: akses.delete_level === 'Y'
+          }
+        }));
+  
+        return response.datatables(res, result);
+      } catch (error) {
+        console.error("Error getAllMenuDatatables:", error);
+        return response.error(res, error.message);
+    }
+  }
+
   async getMenuById(req, res) {
     try {
       const menu = await menuService.getMenuById(req.params.id);

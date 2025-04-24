@@ -1,33 +1,39 @@
-const { Userlevel, Menu, Submenu, Aksesmenu, Aksessubmenu } = require('../models');
+const { Menu, Submenu, Aksesmenu, Aksessubmenu } = require('../models');
 
 const loadSidebar = async (req, res, next) => {
   try {
-    const idlevel = 1; // Ganti sesuai session/token pengguna nantinya
+    const user = req.session.user;
+    if (!user) {
+      res.locals.sidebarMenus = [];
+      return next();
+    }
 
-    // Ambil semua menu yang sesuai dengan hak akses user
+    const idlevel = user.id_level;
+
+    // Ambil semua menu sesuai hak akses user
     const aksesMenus = await Aksesmenu.findAll({
       where: {
         id_level: idlevel,
-        view_level: 'Y',
+        view_level: 'Y',  // Pastikan hanya mengambil menu dengan view_level = 'Y'
       },
       include: [
         {
           model: Menu,
           where: { is_active: 'Y' },
           required: true,
-          order: [['urutan', 'ASC']],
         },
       ],
+      order: [[{ model: Menu }, 'urutan', 'ASC']],
     });
 
-    // Format ulang agar lebih mudah di-loop
     const menus = await Promise.all(aksesMenus.map(async (akses) => {
       const menu = akses.Menu;
 
-      // Ambil semua submenu untuk menu ini
+      // Ambil submenu yang sesuai dengan id_level dan id_menu
       const aksesSubmenus = await Aksessubmenu.findAll({
         where: {
           id_level: idlevel,
+          view_level: 'Y',  // Pastikan hanya submenu dengan view_level = 'Y'
         },
         include: [
           {
@@ -37,9 +43,9 @@ const loadSidebar = async (req, res, next) => {
               is_active: 'Y',
             },
             required: true,
-            order: [['urutan', 'ASC']],
           },
         ],
+        order: [[{ model: Submenu }, 'urutan', 'ASC']],
       });
 
       const submenus = aksesSubmenus.map((aksesSub) => aksesSub.Submenu);
