@@ -15,38 +15,22 @@ class UserService {
   }
 
   async getAllUsersDatatables({ draw, start, length, search, order, columns }) {
-    try {
-      const offset = parseInt(start, 10) || 0;
-      const limit = parseInt(length, 10) || 10;
-      const searchValue = search?.value || '';
+    const searchValue = search?.value || "";
 
-      let orderClause = [['created_at', 'DESC']];
-      if (order && order.length > 0) {
-        const columnIdx = parseInt(order[0].column, 10);
-        const columnName = columns[columnIdx]?.data;
-        const dir = order[0].dir || 'asc';
-        if (columnName) {
-          orderClause = [[columnName, dir]];
-        }
-      }
+    const { count, rows } = await UserRepository.getPaginatedUsers({
+      start: parseInt(start, 10) || 0,
+      length: parseInt(length, 10) || 10,
+      search: searchValue,
+      order,
+      columns
+    });
 
-      const { count, rows } = await UserRepository.getPaginatedUsers({
-        start: offset,
-        length: limit,
-        search: searchValue,
-        order,
-        columns
-      });
-
-      return {
-        draw: parseInt(draw, 10),
-        recordsTotal: count,
-        recordsFiltered: count,
-        data: rows
-      };
-    } catch (error) {
-      throw new Error(error.message); // Melempar error ke controller
-    }
+    return {
+      draw: parseInt(draw, 10),
+      recordsTotal: count,
+      recordsFiltered: count,
+      data: rows
+    };
   }
 
   async getUserById(id) {

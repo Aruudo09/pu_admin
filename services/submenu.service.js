@@ -9,6 +9,25 @@ class SubmenuService {
     return submenu;
   }
 
+  async getAllSubmenuDatatables({ draw, start, length, search, order, columns }) {
+    const searchValue = search?.value || "";
+    
+    const { count, rows } = await SubmenuRepository.getPaginatedSubmenu({
+      start: parseInt(start, 10) || 0,
+      length: parseInt(length, 10) || 10,
+      search: searchValue,
+      order,
+      columns
+    });
+
+    return {
+      draw: parseInt(draw, 10),
+      recordsTotal: count,
+      recordsFiltered: count,
+      data: rows
+    };
+  }
+
   async getSubmenuById(id_submenu) {
     const submenu = await SubmenuRepository.getSubmenuById(id_submenu);
     if (!submenu) {

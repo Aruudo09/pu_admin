@@ -1,5 +1,67 @@
 document.addEventListener("DOMContentLoaded", () => {
 
+  $("#submenuTable").DataTable({
+    processing: true,
+    serverSide: true,
+    responsive: false,
+    scrollX: false,
+    autowidth: true,
+    ajax: {
+      url: "/api/submenu/datatables", // Backend endpoint
+      type: "GET",
+      dataSrc: function (json) {
+        console.log("DataTables response:", json); // Debugging log
+        return json.data; // Extract the data array
+      },
+    },
+    columns: [
+      { data: "nama_submenu", title: "Nama Submenu" },
+      { data: "link", title: "Link" },
+      { data: "icon", title: "Icon" },
+      { data: "urutan", title: "Urutan" },
+      { data: "is_active", title: "Is Active" },
+      { data: "id_menu", title: "ID Menu" },
+      {
+        data: "id_submenu",
+        render: function (data, type, row) {
+          console.log("Data ID:", row); // Debugging log
+          let buttons = `<div class="d-flex gap-2 justify-content-center">`;
+
+          if (row.akses && row.akses.edit) {
+            buttons += `
+              <a href="#" class="btn btn-sm btn-primary submenuEdit" data-id="${row.id_submenu}">
+                <i class="fa fa-edit"></i>
+              </a>`;
+          }
+          if (row.akses && row.akses.delete) {
+            buttons += `
+              <a href="#" class="btn btn-sm btn-danger submenuDelete" data-id="${row.id_submenu}">
+                <i class="fa fa-times"></i>
+              </a>`;
+          }
+
+          buttons += `</div>`;
+          return buttons;
+        },
+      },
+    ],
+    columnDefs: [
+      // { responsivePriority: 1, targets: 0 }, // Title
+      // { responsivePriority: 2, targets: 1 }, // Image URL
+      // { responsivePriority: 3, targets: 5 },  // Action
+      // { targets: 0, width: '20%' }, // Set width for the first column (Title)
+      // { targets: 1, width: '15%' }, // Set width for the second column (Image URL)
+      // { targets: 2, width: '25%' }, // Set width for the third column (Description)
+      // { targets: 3, width: '40%' }, // Set width for the fourth column (Category ID)
+      // { targets: 4, width: '15%' }, // Set width for the fifth column (Created At)
+      // { targets: 5, width: '30%' }  // Set width for the sixth column (Action)
+    ],
+    drawCallback: function () {
+      // Force redraw untuk sync header & body
+      $($.fn.dataTable.tables(true)).DataTable().columns.adjust();
+    },
+  });
+
   // CREATE OR UPDATE
   document.getElementById("submitSubmenuBtn").addEventListener("click", async () => {
     const id = document.getElementById("hidden_id_submenu").value;
@@ -45,16 +107,15 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // MENGISI VALUE FORM (EDIT)
-  document.querySelectorAll(".submenuEdit").forEach((btn) => {
-    btn.addEventListener("click", async (e) => {
+  document.getElementById("submenuTable").addEventListener("click", async (e) => {
+    if (e.target.closest(".submenuEdit")) {
       e.preventDefault();
+      const btn = e.target.closest(".submenuEdit");
       const id = btn.getAttribute("data-id");
-      console.log("berhasil");
 
       try {
         const res = await fetch(`/api/submenu/${id}`);
         const data = await res.json();
-        console.log(data);
 
         if (data.status === "success") {
           const submenu = data.data;
@@ -75,7 +136,7 @@ document.addEventListener("DOMContentLoaded", () => {
       } catch (err) {
         swal("Error", "Gagal menghubungi server", "error");
       }
-    });
+    }
   });
 
   // RESET SAAT MENUTUP MODAL
@@ -86,9 +147,10 @@ document.addEventListener("DOMContentLoaded", () => {
     
 
   // DELETE
-  document.querySelectorAll(".submenuDelete").forEach((btn) => {
-    btn.addEventListener("click", (e) => {
+  document.getElementById("submenuTable").addEventListener("click", async (e) => {
+    if (e.target.closest(".submenuDelete")) {
       e.preventDefault();
+      const btn = e.target.closest(".submenuDelete");
       const id = btn.getAttribute("data-id");
 
       swal({
@@ -98,27 +160,31 @@ document.addEventListener("DOMContentLoaded", () => {
         dangerMode: true,
       }).then(async (willDelete) => {
         if (willDelete) {
-          const res = await fetch(`/api/submenu/${id}`, {
-            method: "DELETE",
-          });
-
-          const data = await res.json();
-
-          if (data.status === "success") {
-            swal({
-              icon: "success",
-              title: "Terhapus!",
-              text: data.message,
-              timer: 1500,
-              buttons: false,
-            }).then(() => {
-              location.reload();
+          try {
+            const res = await fetch(`/api/submenu/${id}`, {
+              method: "DELETE",
             });
-          } else {
-            swal("Gagal!", data.message || "Terjadi kesalahan", "error");
+
+            const data = await res.json();
+
+            if (data.status === "success") {
+              swal({
+                icon: "success",
+                title: "Terhapus!",
+                text: data.message,
+                timer: 1500,
+                buttons: false,
+              }).then(() => {
+                location.reload();
+              });
+            } else {
+              swal("Gagal!", data.message || "Terjadi kesalahan", "error");
+            }
+          } catch (err) {
+            swal("Error!", "Gagal menghubungi server", "error");
           }
         }
       });
-    });
+    }
   });
 });  

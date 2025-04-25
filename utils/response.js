@@ -37,3 +37,12 @@ exports.success = (res, message = "Success", data = null) => {
     });
   };
   
+  exports.datatables = (res, { draw = 0, recordsTotal = 0, recordsFiltered = 0, data = [] }) => {
+    return res.status(200).json({
+      draw,
+      recordsTotal,
+      recordsFiltered,
+      data,
+    });
+  };
+  

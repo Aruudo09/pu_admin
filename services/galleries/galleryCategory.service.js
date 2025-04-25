@@ -10,23 +10,11 @@ class GalleryCategory {
     }
 
     async getAllGalleryCategoryDatatables({ draw, start, length, search, order, columns }) {
-        const offset = parseInt(start, 10) || 0;
-        const limit = parseInt(length, 10) || 10;
-        const searchValue = search?.value || '';
+        const searchValue = search?.value || "";
 
-        let orderClause = [['created_at', 'DESC']];
-        if (order && order.length > 0) {
-            const columnIdx = parseInt(order[0].column, 10);
-            const columnName = columns[columnIdx]?.data;
-            const dir = order[0].dir || 'asc';
-            if (columnName) {
-                orderClause = [[columnName, dir]];
-            }
-        }
-
-        const { count, rows } = await GalleryCategoryRepository.getPaginatedGalleryCategories({
-            start: offset,
-            length: limit,
+        const { count, rows } = await GalleryCategoryRepository.getPaginatedGalleryCategory({
+            start: parseInt(start, 10) || 0,
+            length: parseInt(length, 10) || 10,
             search: searchValue,
             order,
             columns

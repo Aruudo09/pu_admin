@@ -15,24 +15,32 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       },
       columns: [
-        { data: 'title' },
-        { data: 'image_url'},
-        { data: 'description' },
-        { data: 'category_id' },
-        { data: 'created_at' },
+        { data: 'title', title: 'Judul' },
+        { data: 'image_url', title: 'URL Gambar' },
+        { data: 'description', title: 'Deskripsi' },
+        { data: 'category_id', title: 'ID Kategori' },
+        { data: 'created_at', title: 'Dibuat Pada' },
         {
           data: 'id',
-          render: function (data) {
-            return `
-            <div class="d-flex gap-2 justify-content-center">
-              <a href="#" class="btn btn-sm btn-primary galleryEdit" data-id="${data}">
-                <i class="fa fa-edit"></i>
-              </a>
-              <a href="#" class="btn btn-sm btn-danger galleryDelete" data-id="${data}">
-                <i class="fa fa-times"></i>
-              </a>
-            </div>
-            `;
+          render: function (data, type, row) {
+            console.log("Data ID:", row); // Debugging log
+            let buttons = `<div class="d-flex gap-2 justify-content-center">`;
+
+            if (row.akses && row.akses.edit) {
+              buttons += `
+                <a href="#" class="btn btn-sm btn-primary galleryEdit" data-id="${row.id}">
+                  <i class="fa fa-edit"></i>
+                </a>`;
+            }
+            if (row.akses && row.akses.delete) {
+              buttons += `
+                <a href="#" class="btn btn-sm btn-danger galleryDelete" data-id="${row.id}">
+                  <i class="fa fa-times"></i>
+                </a>`;
+            }
+
+            buttons += `</div>`;
+            return buttons;
           }
         }
       ],

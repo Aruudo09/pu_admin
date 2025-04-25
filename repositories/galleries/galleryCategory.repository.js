@@ -6,16 +6,17 @@ class GalleryCategoryRepository {
         return await GalleryCategory.findAll();
     }
 
-    async getPaginatedGalleryCategories({ start, length, search, order, columns }) {
-        const where = search
-            ? {
+    async getPaginatedGalleryCategory({ start, length, search, order, columns }) {
+        const where = {
+            ...(search && {
                 [Op.or]: [
                     { name: { [Op.like]: `%${search}%` } },
                     { slug: { [Op.like]: `%${search}%` } },
                     { created_at: { [Op.like]: `%${search}%` } }
                 ]
-            }
-            : {};
+            })
+            // Add any other filters you need here
+        }
 
         const sort = order && order.length > 0
             ? [[columns[order[0].column].data, order[0].dir]]

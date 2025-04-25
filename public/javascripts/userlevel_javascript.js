@@ -1,5 +1,56 @@
 document.addEventListener("DOMContentLoaded", () => {
 
+  $("#userlevelTable").DataTable({
+    processing: true,
+    serverSide: true,
+    responsive: false,
+    scrollX: false,
+    autoWidth: true,
+    ajax: {
+      url: "/api/userlevel/datatables",
+      type: "GET",
+      dataSrc: function (json) {
+        console.log("DataTables response:", json); // Debugging log
+        return json.data;
+      },
+    },
+    columns: [
+      { data: "id_level", title: "ID Level" },
+      { data: "nama_level", title: "Nama Level" },
+      {
+        data: "id_level",
+        title: "Aksi",
+        orderable: false,
+        render: function (data, type, row) {
+  
+          let buttons = `<div class="d-flex gap-2 justify-content-center">`;
+  
+          if (row.akses && row.akses.edit) {
+            buttons += `
+              <a href="#" class="btn btn-sm btn-primary userlevelEdit" data-id="${row.id_level}">
+                <i class="fa fa-edit"></i>
+              </a>`;
+          }
+  
+          if (row.akses && row.akses.delete) {
+            buttons += `
+              <a href="#" class="btn btn-sm btn-danger userlevelDelete" data-id="${row.id_level}">
+                <i class="fa fa-times"></i>
+              </a>`;
+          }
+  
+          buttons += `</div>`;
+          return buttons;
+        },
+      },
+    ],
+    drawCallback: function () {
+      $($.fn.dataTable.tables(true)).DataTable().columns.adjust();
+    },
+  });
+  
+  
+
   // CREATE OR UPDATE
   document.getElementById("submitUserlevel").addEventListener("click", async () => {
     const id = document.getElementById("hidden_id_userlevel").value;
@@ -35,9 +86,10 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // MENGISI VALUE FORM (EDIT)
-  document.querySelectorAll(".userlevelEdit").forEach((btn) => {
-    btn.addEventListener("click", async (e) => {
+  document.getElementById("userlevelTable").addEventListener("click", async (e) => {
+    if (e.target.closest(".userlevelEdit")) {
       e.preventDefault();
+      const btn = e.target.closest(".userlevelEdit");
       const id = btn.getAttribute("data-id");
 
       try {
@@ -58,7 +110,7 @@ document.addEventListener("DOMContentLoaded", () => {
       } catch (err) {
         swal("Error", "Gagal menghubungi server", "error");
       }
-    });
+    }
   });
 
   // RESET SAAT MENUTUP MODAL
@@ -69,9 +121,10 @@ document.addEventListener("DOMContentLoaded", () => {
     
 
   // DELETE
-  document.querySelectorAll(".userlevelDelete").forEach((btn) => {
-    btn.addEventListener("click", (e) => {
+  document.getElementById("userlevelTable").addEventListener("click", async (e) => {
+    if (e.target.closest(".userlevelDelete")) {
       e.preventDefault();
+      const btn = e.target.closest(".userlevelDelete");
       const id = btn.getAttribute("data-id");
 
       swal({
@@ -81,27 +134,31 @@ document.addEventListener("DOMContentLoaded", () => {
         dangerMode: true,
       }).then(async (willDelete) => {
         if (willDelete) {
-          const res = await fetch(`/api/userlevel/${id}`, {
-            method: "DELETE",
-          });
-
-          const data = await res.json();
-
-          if (data.status === "success") {
-            swal({
-              icon: "success",
-              title: "Terhapus!",
-              text: data.message,
-              timer: 1500,
-              buttons: false,
-            }).then(() => {
-              location.reload();
+          try {
+            const res = await fetch(`/api/userlevel/${id}`, {
+              method: "DELETE",
             });
-          } else {
-            swal("Gagal!", data.message || "Terjadi kesalahan", "error");
+
+            const data = await res.json();
+
+            if (data.status === "success") {
+              swal({
+                icon: "success",
+                title: "Terhapus!",
+                text: data.message,
+                timer: 1500,
+                buttons: false,
+              }).then(() => {
+                location.reload();
+              });
+            } else {
+              swal("Gagal!", data.message || "Terjadi kesalahan", "error");
+            }
+          } catch (err) {
+            swal("Error!", "Gagal menghubungi server", "error");
           }
         }
       });
-    });
+    }
   });
 });  
