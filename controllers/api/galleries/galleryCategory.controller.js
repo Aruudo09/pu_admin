@@ -11,15 +11,6 @@ class GalleryCategoryService {
     }
   }
 
-  async getAllGalleryCategoryDatatables(req, res) {
-    try {
-      const result = await galleryCategoryService.getAllGalleryCategoryDatatables(req.query);
-      return res.json(result); // langsung sesuai format DataTable
-    } catch (error) {
-      return res.status(500).json({ error: error.message });
-    }
-  }
-
   async getGalleryCategoryById(req, res) {
     try {
       const galleryCategory = await galleryCategoryService.getGalleryCategoryById(req.params.id);
