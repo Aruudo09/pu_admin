@@ -6,6 +6,7 @@ const router = express.Router();
 
 router.get("/", userlevelController.getAllUserlevel);
 router.get("/datatables", injectUser, userlevelController.getAllUserlevelDatatables);
+router.get("/by-level/:id_level", injectUser, userlevelController.getUserAksesByLevel);
 router.get("/:id", userlevelController.getUserlevelById);
 router.post("/", userlevelController.createUserlevel);
 router.put("/:id", userlevelController.updateUserlevel);

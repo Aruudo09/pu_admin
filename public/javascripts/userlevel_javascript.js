@@ -24,6 +24,8 @@ document.addEventListener("DOMContentLoaded", () => {
         render: function (data, type, row) {
   
           let buttons = `<div class="d-flex gap-2 justify-content-center">`;
+
+          // console.log("Data ID:", row); // Debugging log
   
           if (row.akses && row.akses.edit) {
             buttons += `
@@ -38,6 +40,11 @@ document.addEventListener("DOMContentLoaded", () => {
                 <i class="fa fa-times"></i>
               </a>`;
           }
+
+            buttons += `
+            <a href="#" class="btn btn-sm btn-success userlevelDetail" data-id="${row.id_level}">
+              Akses
+            </a>`;
   
           buttons += `</div>`;
           return buttons;

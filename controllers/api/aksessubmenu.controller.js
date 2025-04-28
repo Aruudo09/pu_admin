@@ -11,6 +11,16 @@ class AksessubmenuController {
     }
   }
 
+  async getAksessubmenuByLevel(req, res) {
+    try {
+      const aksessubmenu = await aksessubmenuService.getAksessubmenuByLevel(req.session.user.id_level);
+      return response.success(res, "Aksessubmenu by level fetched", aksessubmenu);
+    } catch (error) {
+      return response.error(res, error.message);
+    }
+  }
+
+
   async getAksessubmenuById(req, res) {
     try {
       const aksessubmenu = await aksessubmenuService.getAksessubmenuById(req.params.id);

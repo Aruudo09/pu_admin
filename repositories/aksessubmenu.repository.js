@@ -1,4 +1,4 @@
-const { Aksessubmenu } = require("../models");
+const { Aksessubmenu, Submenu } = require("../models");
 
 class AksessubmenuRepository {
   async getAllAksessubmenu() {
@@ -7,6 +7,16 @@ class AksessubmenuRepository {
 
   async getAksessubmenuById(id) {
     return await Aksessubmenu.findByPk(id);
+  }
+
+  async getAksessubmenuWithSubmenuByLevel(id_level) {
+    return await Submenu.findAll({
+      include: [{
+        model: Aksessubmenu,
+        required: false,
+        where: { id_level: id_level },
+      }],
+    });
   }
 
   async createAksessubmenu(aksesmenuData) {

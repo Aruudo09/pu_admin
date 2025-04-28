@@ -17,6 +17,14 @@ class AksessubmenuService {
     return aksessubmenu;
   }
 
+  async getAksessubmenuByLevel(id_level) {
+    const aksessubmenu = await AksessubmenuRepository.getAksessubmenuWithSubmenuByLevel(id_level);
+    if (!aksessubmenu || aksessubmenu.length === 0) {
+      throw new Error("No aksessubmenu found for the given level");
+    }
+    return aksessubmenu;
+  }
+
   async createAksessubmenu(aksessubmenuData) {
     const requiredFields = ["id_level", "id_submenu", "view_level", "add_level", "edit_level", "delete_level", "print_level", "upload_level"];
     if (!requiredFields.every(field => aksessubmenuData[field])) {

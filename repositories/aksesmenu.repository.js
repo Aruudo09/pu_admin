@@ -1,4 +1,5 @@
-const { Aksesmenu } = require("../models");
+const { where } = require("sequelize");
+const { Aksesmenu, Menu } = require("../models");
 
 class AksesmenuRepository {
   async getAllAksesmenu() {
@@ -19,6 +20,16 @@ class AksesmenuRepository {
 
   async deleteAksesmenu(id) {
     return await Aksesmenu.destroy({ where: { id } });
+  }
+
+  async getAksesmenuByLevel(id_level) {
+    return await Menu.findAll({
+      include: [{ 
+        model: Aksesmenu, 
+        required: true,
+        where: { id_level: id_level },
+      }],
+    });
   }
 }
 

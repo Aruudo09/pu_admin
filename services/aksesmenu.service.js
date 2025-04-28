@@ -9,6 +9,15 @@ class AksesmenuService {
     return aksesmenu;
   }
 
+  async getAksesmenuByLevel(id_level) {
+
+    const aksesmenu = await AksesmenuRepository.getAksesmenuByLevel(id_level);
+    if (!aksesmenu || aksesmenu.length === 0) {
+      throw new Error("No aksesmenu found for the given level");
+    }
+    return aksesmenu;
+  }
+
   async getAksesmenuById(id) {
     const aksesmenu = await AksesmenuRepository.getAksesmenuById(id);
     if (!aksesmenu) {

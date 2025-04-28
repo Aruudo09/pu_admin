@@ -1,42 +1,42 @@
 <!--   Core JS Files   -->
-<script src="../assets/js/core/jquery-3.7.1.min.js"></script>
-<script src="../assets/js/core/popper.min.js"></script>
-<script src="../assets/js/core/bootstrap.min.js"></script>
+<script src="/assets/js/core/jquery-3.7.1.min.js"></script>
+<script src="/assets/js/core/popper.min.js"></script>
+<script src="/assets/js/core/bootstrap.min.js"></script>
 
 <!-- jQuery Scrollbar -->
-<script src="../assets/js/plugin/jquery-scrollbar/jquery.scrollbar.min.js"></script>
+<script src="/assets/js/plugin/jquery-scrollbar/jquery.scrollbar.min.js"></script>
 
 <!-- Chart JS -->
-<script src="../assets/js/plugin/chart.js/chart.min.js"></script>
+<script src="/assets/js/plugin/chart.js/chart.min.js"></script>
 
 <!-- jQuery Sparkline -->
-<script src="../assets/js/plugin/jquery.sparkline/jquery.sparkline.min.js"></script>
+<script src="/assets/js/plugin/jquery.sparkline/jquery.sparkline.min.js"></script>
 
 <!-- Chart Circle -->
-<script src="../assets/js/plugin/chart-circle/circles.min.js"></script>
+<script src="/assets/js/plugin/chart-circle/circles.min.js"></script>
 
 <!-- Datatables -->
-<script src="../assets/js/plugin/datatables/datatables.min.js"></script>
+<script src="/assets/js/plugin/datatables/datatables.min.js"></script>
 <script src="https://cdn.datatables.net/1.13.5/js/dataTables.bootstrap5.min.js"></script>
 <!-- JS DataTables Responsive -->
 <script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
 
 <!-- Bootstrap Notify -->
-<script src="../assets/js/plugin/bootstrap-notify/bootstrap-notify.min.js"></script>
+<script src="/assets/js/plugin/bootstrap-notify/bootstrap-notify.min.js"></script>
 
 <!-- jQuery Vector Maps -->
-<script src="../assets/js/plugin/jsvectormap/jsvectormap.min.js"></script>
-<script src="../assets/js/plugin/jsvectormap/world.js"></script>
+<script src="/assets/js/plugin/jsvectormap/jsvectormap.min.js"></script>
+<script src="/assets/js/plugin/jsvectormap/world.js"></script>
 
 <!-- Sweet Alert -->
-<script src="../assets/js/plugin/sweetalert/sweetalert.min.js"></script>
+<script src="/assets/js/plugin/sweetalert/sweetalert.min.js"></script>
 
 <!-- Kaiadmin JS -->
-<script src="../assets/js/kaiadmin.min.js"></script>
+<script src="/assets/js/kaiadmin.min.js"></script>
 
 <!-- Kaiadmin DEMO methods, don't include it in your project! -->
-<script src="../assets/js/setting-demo.js"></script>
-<script src="../assets/js/demo.js"></script>
+<script src="/assets/js/setting-demo.js"></script>
+<script src="/assets/js/demo.js"></script>
 
 <!-- PEMILIHAN PAGE JAVASCRIPT -->
 <!-- <script src="<%= jslink %>"></script> -->
@@ -46,6 +46,9 @@
     <script src="javascripts/javascript.js"></script>
 <% } %> -->
 <script src="<%= jslink %>"></script>
+<% if (typeof jslink2 !== 'undefined') { %>
+  <script src="<%= jslink2 %>"></script>
+<% } %>
 <script>
     document.addEventListener('DOMContentLoaded', () => {
   const currentPath = window.location.pathname;

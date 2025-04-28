@@ -93,8 +93,8 @@
 
             </div>
 
-              <!-- MODAL EDIT DATA -->
-              <div
+            <!-- MODAL ADD/EDIT DATA -->
+            <div
               class="modal fade"
               id="userlevelModal"
               tabindex="-1"
@@ -153,6 +153,25 @@
                     >
                       Close
                     </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- MODAL HAK AKSES -->
+            <div class="modal fade" id="aksesModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+              <div class="modal-dialog modal-xl">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="staticBackdropLabel">Manajemen Akses Menu & Submenu</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    <%- include('./userAkses') %>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Understood</button>
                   </div>
                 </div>
               </div>
