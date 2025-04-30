@@ -22,12 +22,17 @@ document.addEventListener("DOMContentLoaded", () => {
             tbody.innerHTML = ""; // Kosongkan dulu
     
             aksesMenu.forEach((menu, i) => {
+
+              let aksesMenu = menu.Aksesmenus[0]; // Ambil akses menu dari hasil query
+
+              console.log("Menu:", JSON.stringify(menu.Aksesmenus[0], null, 2));
+
               const trMenu = document.createElement("tr");
               trMenu.className = "table-success";
               trMenu.innerHTML = `
                 <td>${i + 1}</td>
                 <td>${menu.nama_menu}</td>
-                <td class="text-center">${menu.view_level === 'Y' ? iconCheck() : iconCross()}</td>
+                <td class="text-center">${aksesMenu.view_level === 'Y' ? iconCheck('view_level', 'menu', aksesMenu.id, aksesMenu.id_menu) : iconCross('view_level', 'menu', aksesMenu.id, aksesMenu.id_menu)}</td>
                 <td colspan="5" class="bg-light"></td>
               `;
               tbody.appendChild(trMenu);
@@ -35,29 +40,46 @@ document.addEventListener("DOMContentLoaded", () => {
               aksesSubmenu
                 .filter(sub => sub.id_menu === menu.id_menu)
                 .forEach(sub => {
-                  console.log("Submenu:", JSON.stringify(sub.Aksessubmenus[index], null, 2));
+                  let akses = sub.Aksessubmenus[0]; // Ambil akses submenu dari hasil query
+
+                  if (akses == undefined) {
+                    akses = {
+                        id: sub.id,
+                        id_level: sub.id_level,
+                        id_submenu: sub.id_submenu,
+                        view_level: 'N',
+                        add_level: 'N',
+                        edit_level: 'N',
+                        delete_level: 'N',
+                        print_level: 'N',
+                        upload_level: 'N'
+                    };
+                }
+
+                // console.log("Submenu:", JSON.stringify(akses, null, 2));
+
                   const trSub = document.createElement("tr");
                   trSub.className = "table-info";
                   trSub.innerHTML = `
                     <td></td>
                     <td>${sub.nama_submenu}</td>
-                    <td class="text-center" data-level="view_level" data-id="${sub.id}" data-type="submenu">
-                  ${sub.Aksessubmenus.view_level === 'Y' ? iconCheck('view_level', 'submenu', sub.id) : iconCross('view_level', 'submenu', sub.id)}
+                    <td class="text-center" data-level="view_level" data-id="${akses.id}" data-type="submenu" data-submenu="${akses.id_submenu}">
+                  ${akses.view_level === 'Y' ? iconCheck('view_level', 'submenu', akses.id, akses.id_submenu) : iconCross('view_level', 'submenu', akses.id, akses.id_submenu)}
                 </td>
-                <td class="text-center" data-level="add_level" data-id="${sub.id}" data-type="submenu">
-                  ${sub.Aksessubmenus.add_level === 'Y' ? iconCheck('add_level', 'submenu', sub.id) : iconCross('add_level', 'submenu', sub.id)}
+                <td class="text-center" data-level="add_level" data-id="${akses.id}" data-type="submenu" data-submenu="${akses.id_submenu}">
+                  ${akses.add_level === 'Y' ? iconCheck('add_level', 'submenu', akses.id, akses.id_submenu) : iconCross('add_level', 'submenu', akses.id, akses.id_submenu)}
                 </td>
-                <td class="text-center" data-level="edit_level" data-id="${sub.id}" data-type="submenu">
-                  ${sub.Aksessubmenus.edit_level === 'Y' ? iconCheck('edit_level', 'submenu', sub.id) : iconCross('edit_level', 'submenu', sub.id)}
+                <td class="text-center" data-level="edit_level" data-id="${akses.id}" data-type="submenu" data-submenu="${akses.id_submenu}">
+                  ${akses.edit_level === 'Y' ? iconCheck('edit_level', 'submenu', akses.id, akses.id_submenu) : iconCross('edit_level', 'submenu', akses.id, akses.id_submenu)}
                 </td>
-                <td class="text-center" data-level="delete_level" data-id="${sub.id}" data-type="submenu">
-                  ${sub.Aksessubmenus.delete_level === 'Y' ? iconCheck('delete_level', 'submenu', sub.id) : iconCross('delete_level', 'submenu', sub.id)}
+                <td class="text-center" data-level="delete_level" data-id="${akses.id}" data-type="submenu" data-submenu="${akses.id_submenu}">
+                  ${akses.delete_level === 'Y' ? iconCheck('delete_level', 'submenu', akses.id, akses.id_submenu) : iconCross('delete_level', 'submenu', akses.id, akses.id_submenu)}
                 </td>
-                <td class="text-center" data-level="print_level" data-id="${sub.id}" data-type="submenu">
-                  ${sub.Aksessubmenus.print_level === 'Y' ? iconCheck('print_level', 'submenu', sub.id) : iconCross('print_level', 'submenu', sub.id)}
+                <td class="text-center" data-level="print_level" data-id="${akses.id}" data-type="submenu" data-submenu="${akses.id_submenu}">
+                  ${akses.print_level === 'Y' ? iconCheck('print_level', 'submenu', akses.id, akses.id_submenu) : iconCross('print_level', 'submenu', akses.id, akses.id_submenu)}
                 </td>
-                <td class="text-center" data-level="upload_level" data-id="${sub.id}" data-type="submenu">
-                  ${sub.Aksessubmenus.upload_level === 'Y' ? iconCheck('upload_level', 'submenu', sub.id) : iconCross('upload_level', 'submenu', sub.id)}
+                <td class="text-center" data-level="upload_level" data-id="${akses.id}" data-type="submenu" data-submenu="${akses.id_submenu}">
+                  ${akses.upload_level === 'Y' ? iconCheck('upload_level', 'submenu', akses.id, akses.id_submenu) : iconCross('upload_level', 'submenu', akses.id, akses.id_submenu)}
                 </td>
                   `;
                   tbody.appendChild(trSub);
@@ -74,57 +96,87 @@ document.addEventListener("DOMContentLoaded", () => {
           }
         }
     
-        function iconCheck(level, type, id) {
-            return `<i class="fas fa-check-circle text-success" data-level="${level}" data-id="${id}" data-type="${type}" style="cursor: pointer;"></i>`;
+        function iconCheck(level, type, id, id_detail) {
+            return `<i class="fas fa-check-circle text-success" data-level="${level}" data-id="${id}" data-type="${type}" data-id_detail="${id_detail}" style="cursor: pointer;"></i>`;
           }
     
-        function iconCross(level, type, id) {
-            return `<i class="fas fa-times-circle text-danger" data-level="${level}" data-id="${id}" data-type="${type}" style="cursor: pointer;"></i>`;
+        function iconCross(level, type, id, id_detail) {
+            return `<i class="fas fa-times-circle text-danger" data-level="${level}" data-id="${id}" data-type="${type}" data-id_detail="${id_detail}" style="cursor: pointer;"></i>`;
           }
+
       });
+
+      // FUNCTION TOGGLE ICON STATUS
+      function toggleIconStatus(icon) {
+        const isActive = icon.classList.contains("text-success");
+        // icon.classList.remove(isActive ? "text-success" : "text-danger", isActive ? "fa-check-circle" : "fa-times-circle");
+        // icon.classList.add(isActive ? "text-danger" : "text-success", isActive ? "fa-times-circle" : "fa-check-circle");
+        if (isActive) {
+          // Dari aktif ke non-aktif
+          icon.classList.remove("text-success", "fa-check-circle");
+          icon.classList.add("text-danger", "fa-times-circle");
+        } else {
+          // Dari non-aktif ke aktif
+          icon.classList.remove("text-danger", "fa-times-circle");
+          icon.classList.add("text-success", "fa-check-circle");
+        }
+      }
 
       document.querySelector("#userAksesT tbody").addEventListener("click", async (e) => {
         const icon = e.target.closest("i");
         if (icon) {
+          toggleIconStatus(icon);
+        }
+      });
+
+      document.getElementById("submitAksesBtn").addEventListener("click", async (e) => {
+        console.log("Submit button clicked");
+        const icons = document.querySelectorAll("#userAksesT tbody i");
+        console.log("Icons:", icons);
+        const aksesList = [];
+
+        icons.forEach((icon) => {
           const level = icon.getAttribute("data-level");
           const id = icon.getAttribute("data-id");
           const type = icon.getAttribute("data-type");
+          const id_detail = icon.getAttribute("data-id_detail");
           const currentStatus = icon.classList.contains("text-success") ? 'Y' : 'N';
           const newStatus = currentStatus === 'Y' ? 'N' : 'Y'; // toggle status
-    
-          // Update status di UI
-          icon.classList.toggle("text-success");
-          icon.classList.toggle("fa-check-circle");
-          icon.classList.toggle("text-danger");
-          icon.classList.toggle("fa-times-circle");
 
-          console.log("Icon clicked:", JSON.stringify({ level, id, type, newStatus }));
+          aksesList.push({
+            level: level,
+            id: id,
+            type: type,
+            id_detail: id_detail,
+            status: currentStatus
+          });
+        });
 
-    
-          // Kirim update status ke server (misalnya ke API)
-          try {
-            const res = await fetch(`/api/userlevel/update-access`, {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({
-                id,
-                level,
-                type,
-                status: newStatus,
-              }),
-            });
-    
-            if (!res.ok) throw new Error("Gagal memperbarui status");
-    
-            console.log("Status berhasil diperbarui");
-          } catch (err) {
-            console.error("Error memperbarui status:", err);
-            // Jika gagal, kembalikan ikon ke status sebelumnya
-            icon.classList.toggle("text-success");
-            icon.classList.toggle("text-danger");
+        console.log("Data dikirim ke server:", aksesList);
+
+        try {
+          const response = await fetch("/api/userlevel/upsert-access", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+              akses: aksesList
+            })
+          });
+      
+          const result = await response.json();
+      
+          if (response.ok) {
+            swal("Berhasil!", result.message || "Hak Akses berhasil deperbarui", "success");
+            setTimeout(() => location.reload(), 1500);
+          } else {
+            swal("Gagal!", data.message || "Terjadi kesalahan saat memperbarui data", "error");
           }
+        } catch (error) {
+          // console.error("Error saat mengirim data:", error);
+          swal("Error!", "Gagal menghubungi server", "error");
         }
       });
+
 });

@@ -9,6 +9,7 @@ router.get("/datatables", injectUser, userlevelController.getAllUserlevelDatatab
 router.get("/by-level/:id_level", injectUser, userlevelController.getUserAksesByLevel);
 router.get("/:id", userlevelController.getUserlevelById);
 router.post("/", userlevelController.createUserlevel);
+router.post("/upsert-access", injectUser, userlevelController.upsertAccess);
 router.put("/:id", userlevelController.updateUserlevel);
 router.delete("/:id", userlevelController.deleteUserlevel);
 

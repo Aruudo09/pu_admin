@@ -1,5 +1,7 @@
 const { Model, Op } = require("sequelize");
-const { Userlevel } = require("../models");
+const { sequelize, Userlevel } = require("../models");
+const aksesmenuRepository = require("./aksesmenu.repository");
+const aksessubmenuRepository = require("./aksessubmenu.repository");
 
 class UserlevelRepository {
   async getAllUserlevels() {
@@ -52,6 +54,67 @@ class UserlevelRepository {
   async deleteUserlevel(id_level) {
     return await Userlevel.destroy({ where: { id_level } });
   }
+
+  async upsertAccess(id_level, aksesList) {
+    const transaction = await sequelize.transaction();
+    const insertedIds = {}; // key: `${type}_${id_detail}_${id_level}` -> value: id
+
+    try {
+      // Loop aksesList untuk update/upsert Aksesmenu / Aksessubmenu
+      for (const akses of aksesList) {
+        const { id, type, id_detail, level, status } = akses;
+
+        const key = `${type}_${id_detail}_${id_level}`;
+        
+        // Menentukan id_menu atau id_submenu berdasarkan tipe
+        let aksesData = {
+          id_level,
+          level,
+          status
+        };
+
+        // Ambil ID dari penyimpanan sementara kalau ada
+        if (insertedIds[key]) {
+          aksesData.id = insertedIds[key];
+        } else if (id !== undefined && id !== 'undefined') {
+          aksesData.id = id;
+        }
+        
+  
+        if (type === 'menu' && id_detail) {
+          aksesData.id_menu = id_detail;
+        } else if (type === 'submenu' && id_detail) {
+          aksesData.id_submenu = id_detail;
+        } else {
+          throw new Error(`Invalid type or id_detail: ${type}, ${id_detail}`);
+        }
+        
+  
+        // Proses upsert untuk menu atau submenu
+        if (type === 'menu') {
+          const menu = await aksesmenuRepository.upsert(aksesData, { transaction });
+          if (!insertedIds[key]) {
+            insertedIds[key] = menu.id;
+          }
+        } else if (type === 'submenu') {
+          const submenu = await aksessubmenuRepository.upsert(aksesData, { transaction });
+          if (!insertedIds[key]) {
+            insertedIds[key] = submenu.id;
+          }
+        }
+      }
+  
+      // Commit transaksi
+      await transaction.commit();
+      return { message: 'Access updated successfully' };
+    } catch (error) {
+      // Rollback transaksi jika ada error
+      await transaction.rollback();
+      throw error;
+    }
+  }
+  
+  
 }
 
 module.exports = new UserlevelRepository();

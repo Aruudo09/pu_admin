@@ -88,6 +88,23 @@ class UserlevelController {
       return response.notFound(res, error.message);
     }
   }
+
+  async upsertAccess(req, res) {
+    try {
+      const id_level = req.session.user.id_level;
+      const aksesData = req.body.akses;
+
+      // console.log("ID Level:", id_level);
+      // console.log("Akses Data:", aksesData);
+
+      const result = await userlevelService.upsertAccess({ id_level, akses: aksesData });
+      return response.success(res, "Access updated successfully", result);
+    } catch (error) {
+      return response.error(res, error.message, 400);
+    }
+  }
+  
+
 }
 
 module.exports = new UserlevelController();

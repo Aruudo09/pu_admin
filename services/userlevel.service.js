@@ -1,6 +1,7 @@
 const { Op } = require("sequelize");
 const { Userlevel } = require("../models");
 const UserlevelRepository = require("../repositories/userlevel.repository");
+const userlevelRepository = require("../repositories/userlevel.repository");
 
 class UserlevelService {
   async getAllUserlevel() {
@@ -62,6 +63,23 @@ class UserlevelService {
     }
     return await UserlevelRepository.deleteUserlevel(id_level);
   }
+
+  async upsertAccess(data) {
+    const { id_level, akses } = data;
+  
+    if (!id_level || !Array.isArray(akses)) {
+      throw new Error("id_level dan akses wajib diisi");
+    }
+
+    // console.log("id_level2", id_level);
+    // console.log("akses2", akses);
+  
+    // Kirim ke repository untuk handle transaction upsert aksesmenu + aksessubmenu
+    const result = await userlevelRepository.upsertAccess(id_level, akses);
+  
+    return result;
+  }
+  
 }
 
 module.exports = new UserlevelService();

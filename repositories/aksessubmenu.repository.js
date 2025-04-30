@@ -30,6 +30,38 @@ class AksessubmenuRepository {
   async deleteAksessubmenu(id) {
     return await Aksessubmenu.destroy({ where: { id } });
   }
+
+  async deleteAksessubmenuById_submenu(id_submenu, transaction) {
+    return await Aksessubmenu.destroy({
+      where: { id_submenu },
+      transaction
+    });
+  }
+  
+
+  async upsert(data, options) {
+    const { id, id_level, id_submenu, level, status } = data;
+    // console.log(data)
+    try {
+      // Siapkan payload hanya dengan field yang valid
+      const payload = {
+        id_level,
+        id_submenu,
+        [level]: status,
+        ...(id !== undefined && id !== 'undefined' && id !== null ? { id: Number(id) } : {})
+      };
+  
+      const [aksessubmenu] = await Aksessubmenu.upsert(payload, {
+        returning: true,
+        ...options
+      });
+  
+      return aksessubmenu;
+    } catch (error) {
+      throw new Error('Failed to upsert Aksessubmenu: ' + error.message);
+    }
+  }
+  
 }
 
 module.exports = new AksessubmenuRepository();

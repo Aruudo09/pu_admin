@@ -1,5 +1,6 @@
 const { Model, Op } = require("sequelize");
-const { Submenu } = require("../models");
+const { sequelize, Submenu } = require("../models");
+const aksessubmenuRepository = require("./aksessubmenu.repository");
 
 class SubmenuRepository {
   async getAllSubmenu() {
@@ -53,7 +54,24 @@ class SubmenuRepository {
   }
 
   async deleteSubmenu(id_submenu) {
-    return await Submenu.destroy({ where: { id_submenu } });
+    const transaction = await sequelize.transaction();
+  
+    try {
+      // Hapus akses submenu terlebih dahulu
+      await aksessubmenuRepository.deleteAksessubmenuById_submenu(id_submenu, transaction);
+  
+      // Hapus submenu
+      await Submenu.destroy({
+        where: { id_submenu },
+        transaction
+      });
+  
+      await transaction.commit();
+      return { success: true, message: 'Submenu dan akses submenu berhasil dihapus' };
+    } catch (error) {
+      await transaction.rollback();
+      throw error;
+    }
   }
 }
 

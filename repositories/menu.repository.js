@@ -1,5 +1,5 @@
 const { Model, Op } = require("sequelize");
-const { Menu } = require("../models");
+const { sequelize, Menu } = require("../models");
 
 class MenuRepository {
   async getAllMenu() {
@@ -51,7 +51,21 @@ class MenuRepository {
   }
 
   async deleteMenu(id_menu) {
-    return await Menu.destroy({ where: { id_menu } });
+    const transaction = await sequelize.transaction();
+
+    try {
+      // Hapus akses menu terlebih dahulu
+      await aksessubmenuRepository.deleteByMenuId(id_menu, transaction);
+      await aksesmenuRepository.deleteByMenuId(id_menu, transaction);
+
+      // Hapus menu
+      await Menu.destroy({ where: { id_menu }, transaction });
+
+      await transaction.commit();
+    } catch (error) {
+      await transaction.rollback();
+      throw error;
+    }
   }
 }
 
