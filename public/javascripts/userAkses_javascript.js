@@ -28,8 +28,8 @@ document.addEventListener("DOMContentLoaded", () => {
               console.log("Menu:", JSON.stringify(menu.Aksesmenus[0], null, 2));
 
               const viewIcon = menus?.view_level === 'Y'
-            ? iconCheck('view_level', 'menu', menus?.id, menu.id_menu)
-            : iconCross('view_level', 'menu', menus?.id, menu.id_menu);
+              ? iconCheck('view_level', 'menu', menus?.id, menu.id_menu)
+              : iconCross('view_level', 'menu', menus?.id, menu.id_menu);
 
               const trMenu = document.createElement("tr");
               trMenu.className = "table-success";
