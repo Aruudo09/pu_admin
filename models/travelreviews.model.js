@@ -1,5 +1,5 @@
 module.exports = (sequelize, DataTypes) => {
-    const TravelReview = sequelize.define("TravelReview", {
+    const TravelReviews = sequelize.define("TravelReviews", {
       id: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
@@ -23,11 +23,11 @@ module.exports = (sequelize, DataTypes) => {
       }
     },
     {
-      tableName: "travel_reviews", // 👈 Nama tabel diubah menjadi travel_reviews
+      tableName: "travel_reviews",
       timestamps: true,
       createdAt: 'created_at',
       updatedAt: false,
     });
   
-    return TravelReview;
+    return TravelReviews;
 };

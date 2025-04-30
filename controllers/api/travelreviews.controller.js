@@ -1,52 +1,76 @@
 const response = require("../../utils/response");
-const travelReviewService = require("../../services/travelreview.service");
+const travelReviewsService = require("../../services/travelreviews.service");
 
-class TravelReviewController {
+class TravelReviewsController {
   async getAllTravelReviews(req, res) {
     try {
-      const reviews = await travelReviewService.getAllTravelReviews();
+      const reviews = await travelReviewsService.getAllTravelReviews();
       return response.success(res, "All travel reviews fetched", reviews);
     } catch (error) {
       return response.error(res, error.message);
     }
   }
 
-  async getTravelReviewById(req, res) {
+  async getAllTravelReviewsDatatables(req, res) {
     try {
-      const review = await travelReviewService.getTravelReviewById(req.params.id);
+      const { akses = {} } = res.locals;
+      console.log("akses", akses);
+
+      if (akses.view_level !== 'Y') {
+        return res.status(403).json({ error: "Akses ditolak" });
+      }
+
+      const result = await travelReviewsService.getAllTravelReviewsDatatables(req.query);
+      result.data = result.data.map(row => ({
+        ...row.get({ plain: true }),
+        akses: {
+          edit: akses.edit_level === 'Y',
+          delete: akses.delete_level === 'Y',
+        },
+      }));
+
+      return response.datatables(res, result);
+    } catch (error) {
+      console.error("Error getAllTravelReviewsDatatables:", error);
+      return response.error(res, error.message);
+    }
+  }
+
+  async getTravelReviewsById(req, res) {
+    try {
+      const review = await travelReviewsService.getTravelReviewsById(req.params.id);
       return response.success(res, "Travel review fetched", review);
     } catch (error) {
       return response.notFound(res, error.message);
     }
   }
 
-  async createTravelReview(req, res) {
+  async createTravelReviews(req, res) {
     try {
-      const newReview = await travelReviewService.createTravelReview(req.body);
+      const newReview = await travelReviewsService.createTravelReviews(req.body);
       return response.success(res, "Travel review created", newReview);
     } catch (error) {
       return response.error(res, error.message, 400);
     }
   }
 
-  async updateTravelReview(req, res) {
+  async updateTravelReviews(req, res) {
     try {
-      await travelReviewService.updateTravelReview(req.params.id, req.body);
+      await travelReviewsService.updateTravelReviews(req.params.id, req.body);
       return response.success(res, "Travel review updated successfully");
     } catch (error) {
       return response.error(res, error.message, 400);
     }
   }
 
-  async deleteTravelReview(req, res) {
+  async deleteTravelReviews(req, res) {
     try {
-      await travelReviewService.deleteTravelReview(req.params.id);
+      await travelReviewsService.deleteTravelReviews(req.params.id);
       return response.success(res, "Travel review deleted successfully");
     } catch (error) {
-      res.status(404).json({ message: error.message });
       return response.notFound(res, error.message);
     }
   }
 }
 
-module.exports = new TravelReviewController();
+module.exports = new TravelReviewsController();
