@@ -33,7 +33,7 @@ class AksesmenuRepository {
     return await Menu.findAll({
       include: [{ 
         model: Aksesmenu, 
-        required: true,
+        required: false,
         where: { id_level: id_level },
       }],
     });
