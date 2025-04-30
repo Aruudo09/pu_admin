@@ -1,12 +1,15 @@
 const express = require("express");
-const travelReviewController = require("../../controllers/api/travelreviews.controller");
+const travelReviewsController = require("../../controllers/api/travelreviews.controller");
+const { injectUser } = require("../../middleware");
 
 const router = express.Router();
 
-router.get("/", travelReviewController.getAllTravelReviews);
-router.get("/:id", travelReviewController.getTravelReviewById);
-router.post("/", travelReviewController.createTravelReview);
-router.put("/:id", travelReviewController.updateTravelReview);
-router.delete("/:id", travelReviewController.deleteTravelReview);
+// Endpoint CRUD
+router.get("/", travelReviewsController.getAllTravelReviews);
+router.get("/datatables", injectUser, travelReviewsController.getAllTravelReviewsDatatables);
+router.get("/:id", travelReviewsController.getTravelReviewsById);
+router.post("/", travelReviewsController.createTravelReviews);
+router.put("/:id", travelReviewsController.updateTravelReviews);
+router.delete("/:id", travelReviewsController.deleteTravelReviews);
 
 module.exports = router;

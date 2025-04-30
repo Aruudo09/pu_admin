@@ -4,17 +4,52 @@ const travelService = require("../../services/travel.service");
 class TravelController {
   async getAllTravels(req, res) {
     try {
-      const users = await travelService.getAllTravels();
-      return response.success(res, "All user fetched", users)
+      const travels = await travelService.getAllTravels();
+      return response.success(res, "All travels fetched", travels);
     } catch (error) {
+      return response.error(res, error.message);
+    }
+  }
+
+  async getTravelsByCategory(req, res) {
+    try {
+      const category = req.query.category;
+      const travels = await travelService.getTravelsByCategory(category);
+      return response.success(res, "Travels by category fetched", travels);
+    } catch (error) {
+      return response.error(res, error.message);
+    }
+  }
+
+  async getAllTravelsDatatables(req, res) {
+    try {
+      const { akses } = res.locals;
+      console.log("akses", akses);
+
+      if (akses.view_level !== "Y") {
+        return res.status(403).json({ error: "Akses ditolak" });
+      }
+
+      const result = await travelService.getAllTravelsDatatables(req.query);
+      result.data = result.data.map(row => ({
+        ...row.get({ plain: true }),
+        akses: {
+          edit: akses.edit_level === "Y",
+          delete: akses.delete_level === "Y"
+        }
+      }));
+
+      return response.datatables(res, result);
+    } catch (error) {
+      console.error("Error getAllTravelsDatatables:", error);
       return response.error(res, error.message);
     }
   }
 
   async getTravelById(req, res) {
     try {
-      const user = await travelService.getTravelById(req.params.id);
-      return response.success(res, "User fetched", user);
+      const travel = await travelService.getTravelById(req.params.id);
+      return response.success(res, "Travel fetched", travel);
     } catch (error) {
       return response.notFound(res, error.message);
     }
@@ -22,10 +57,10 @@ class TravelController {
 
   async createTravel(req, res) {
     try {
-      const newTravel = await travelService.createTravel(req.body);
-      return response.success(res, "Travel created", newTravel);
+      const travel = await travelService.createTravel(req.body);
+      return response.created(res, "Travel created", travel);
     } catch (error) {
-      return response.success(res, error.message, 400);
+      return response.error(res, error.message, 400);
     }
   }
 
@@ -43,7 +78,6 @@ class TravelController {
       await travelService.deleteTravel(req.params.id);
       return response.success(res, "Travel deleted successfully");
     } catch (error) {
-      res.status(404).json({ message: error.message });
       return response.notFound(res, error.message);
     }
   }
