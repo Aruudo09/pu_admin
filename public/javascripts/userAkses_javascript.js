@@ -14,8 +14,8 @@ document.addEventListener("DOMContentLoaded", () => {
     
             const aksesMenu = data.data.aksesmenu;
             const aksesSubmenu = data.data.aksesSubmenu;
-
-            // console.log("Akses Menu:", JSON.stringify(aksesMenu, null, 2));
+            
+            console.log("Akses Menu:", JSON.stringify(aksesMenu, null, 2));
             // console.log("Akses Submenu:", JSON.stringify(aksesSubmenu, null, 2)); 
 
             const tbody = document.querySelector("#userAksesT tbody");
@@ -23,16 +23,20 @@ document.addEventListener("DOMContentLoaded", () => {
     
             aksesMenu.forEach((menu, i) => {
 
-              let aksesMenu = menu.Aksesmenus[0]; // Ambil akses menu dari hasil query
+              let menus = menu.Aksesmenus[0]; // Ambil akses menu dari hasil query
 
               console.log("Menu:", JSON.stringify(menu.Aksesmenus[0], null, 2));
+
+              const viewIcon = menus?.view_level === 'Y'
+            ? iconCheck('view_level', 'menu', menus?.id, menu.id_menu)
+            : iconCross('view_level', 'menu', menus?.id, menu.id_menu);
 
               const trMenu = document.createElement("tr");
               trMenu.className = "table-success";
               trMenu.innerHTML = `
                 <td>${i + 1}</td>
                 <td>${menu.nama_menu}</td>
-                <td class="text-center">${aksesMenu.view_level === 'Y' ? iconCheck('view_level', 'menu', aksesMenu.id, aksesMenu.id_menu) : iconCross('view_level', 'menu', aksesMenu.id, aksesMenu.id_menu)}</td>
+                <td class="text-center">${viewIcon}</td>
                 <td colspan="5" class="bg-light"></td>
               `;
               tbody.appendChild(trMenu);
