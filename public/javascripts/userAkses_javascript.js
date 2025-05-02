@@ -14,9 +14,6 @@ document.addEventListener("DOMContentLoaded", () => {
     
             const aksesMenu = data.data.aksesmenu;
             const aksesSubmenu = data.data.aksesSubmenu;
-            
-            console.log("Akses Menu:", JSON.stringify(aksesMenu, null, 2));
-            // console.log("Akses Submenu:", JSON.stringify(aksesSubmenu, null, 2)); 
 
             const tbody = document.querySelector("#userAksesT tbody");
             tbody.innerHTML = ""; // Kosongkan dulu
@@ -25,11 +22,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
               let menus = menu.Aksesmenus[0]; // Ambil akses menu dari hasil query
 
-              console.log("Menu:", JSON.stringify(menu.Aksesmenus[0], null, 2));
-
               const viewIcon = menus?.view_level === 'Y'
-            ? iconCheck('view_level', 'menu', menus?.id, menu.id_menu)
-            : iconCross('view_level', 'menu', menus?.id, menu.id_menu);
+              ? iconCheck('view_level', 'menu', menus?.id, menu.id_menu)
+              : iconCross('view_level', 'menu', menus?.id, menu.id_menu);
 
               const trMenu = document.createElement("tr");
               trMenu.className = "table-success";
@@ -134,9 +129,7 @@ document.addEventListener("DOMContentLoaded", () => {
       });
 
       document.getElementById("submitAksesBtn").addEventListener("click", async (e) => {
-        console.log("Submit button clicked");
         const icons = document.querySelectorAll("#userAksesT tbody i");
-        console.log("Icons:", icons);
         const aksesList = [];
 
         icons.forEach((icon) => {
@@ -156,7 +149,6 @@ document.addEventListener("DOMContentLoaded", () => {
           });
         });
 
-        console.log("Data dikirim ke server:", aksesList);
 
         try {
           const response = await fetch("/api/userlevel/upsert-access", {

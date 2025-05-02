@@ -45,6 +45,13 @@ class SubmenuRepository {
     return await Submenu.findByPk(id_submenu);
   }
 
+  async getSubmenuById_menu(id_menu) {
+    return await Submenu.findOne({
+      where: { id_menu },
+      attributes: ["id_submenu"]
+    });
+  }
+
   async createSubmenu(menuData) {
     return await Submenu.create(menuData);
   }
