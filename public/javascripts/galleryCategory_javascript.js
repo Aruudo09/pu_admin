@@ -26,7 +26,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             if (row.akses && row.akses.edit) {
               buttons += `
-                <a href="#" class="btn btn-sm btn-primary galleryCategoryEdit" data-id="${row.id}">
+                <a href="#" class="btn btn-sm btn-warning galleryCategoryEdit" data-id="${row.id}">
                   <i class="fa fa-edit"></i>
                 </a>`;
             }

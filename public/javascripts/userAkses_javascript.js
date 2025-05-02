@@ -101,11 +101,11 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     
         function iconCheck(level, type, id, id_detail) {
-            return `<i class="fas fa-check-circle text-success" data-level="${level}" data-id="${id}" data-type="${type}" data-id_detail="${id_detail}" style="cursor: pointer;"></i>`;
+            return `<i class="fas fa-check-circle text-success" data-level="${level}" data-id="${id}" data-type="${type}" data-id_detail="${id_detail}" style="cursor: pointer; padding: 15px;"></i>`;
           }
     
         function iconCross(level, type, id, id_detail) {
-            return `<i class="fas fa-times-circle text-danger" data-level="${level}" data-id="${id}" data-type="${type}" data-id_detail="${id_detail}" style="cursor: pointer;"></i>`;
+            return `<i class="fas fa-times-circle text-danger" data-level="${level}" data-id="${id}" data-type="${type}" data-id_detail="${id_detail}" style="cursor: pointer; padding: 15px;"></i>`;
           }
 
       });

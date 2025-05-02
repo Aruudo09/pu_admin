@@ -29,7 +29,7 @@ document.addEventListener("DOMContentLoaded", () => {
   
           if (row.akses && row.akses.edit) {
             buttons += `
-              <a href="#" class="btn btn-sm btn-primary userlevelEdit" data-id="${row.id_level}">
+              <a href="#" class="btn btn-sm btn-warning userlevelEdit" data-id="${row.id_level}">
                 <i class="fa fa-edit"></i>
               </a>`;
           }

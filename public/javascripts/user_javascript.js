@@ -26,7 +26,7 @@ $(document).ready(function() {
 
           if (row.akses && row.akses.edit) {
             buttons += `
-              <a href="#" class="btn btn-sm btn-primary userEdit" data-id="${row.id}">
+              <a href="#" class="btn btn-sm btn-warning userEdit" data-id="${row.id}">
                 <i class="fa fa-edit"></i>
               </a>`;
           }
