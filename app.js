@@ -4,8 +4,17 @@ const cors = require("cors");
 const bodyParser = require("body-parser");
 const fs = require("fs");
 const path = require("path");
+const http = require("http"); // Tambahan
+const { Server } = require("socket.io"); // Tambahan
 
 const app = express();
+const server = http.createServer(app); // Ganti dari app.listen
+const io = new Server(server); // Socket.IO instance
+
+// ===> PASANG socket handler
+const socketHandler = require("./socket");
+socketHandler(io); // aktifkan socket listener
+// <===
 
 // 🧠 Session setup
 app.use(
@@ -95,6 +104,6 @@ app.get("/", (req, res) => {
 
 // 🚀 Server run
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);
 });
