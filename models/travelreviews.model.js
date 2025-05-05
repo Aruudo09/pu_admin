@@ -29,5 +29,9 @@ module.exports = (sequelize, DataTypes) => {
       updatedAt: false,
     });
   
+    Travels.associate = (models) => {
+      Travels.belongsTo(models.travel_reviews, { foreignKey: 'travel_id', as: 'travel' });
+   };
+
     return TravelReviews;
 };

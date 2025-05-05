@@ -29,7 +29,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
           if (row.akses && row.akses.edit) {
             buttons += `
-              <a href="#" class="btn btn-sm btn-primary submenuEdit" data-id="${row.id_submenu}">
+              <a href="#" class="btn btn-sm btn-warning submenuEdit" data-id="${row.id_submenu}">
                 <i class="fa fa-edit"></i>
               </a>`;
           }
