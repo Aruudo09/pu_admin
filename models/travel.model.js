@@ -49,8 +49,8 @@ module.exports = (sequelize, DataTypes) => {
       updatedAt: false,
     });
 
-    Travels.associate = (models) => {
-      Travels.hasMany(models.travel_reviews, { foreignKey: 'travel_id', as: 'travel' });
+    Travel.associate = (models) => {
+      Travel.hasMany(models.TravelReviews, { foreignKey: 'travel_id', as: 'travel' });
    };
   
     return Travel;

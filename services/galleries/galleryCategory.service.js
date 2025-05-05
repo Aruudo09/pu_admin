@@ -3,10 +3,7 @@ const GalleryCategoryRepository = require("../../repositories/galleries/galleryC
 class GalleryCategory {
     async getAllGalleryCategory() {
         const galleryCategory = await GalleryCategoryRepository.getAllGalleryCategory();
-        if (galleryCategory.length === 0) {
-            throw new Error("No gallery Category found");
-        }
-        return galleryCategory;
+        return galleryCategory || []; // jika null/undefined, tetap kembalikan array kosong
     }
 
     async getAllGalleryCategoryDatatables({ draw, start, length, search, order, columns }) {

@@ -17,21 +17,21 @@ module.exports = {
         title: 'Umrah',
         image_url: 'images/galeri/galeri1.png',
         description: 'Beautiful landscapes and wildlife',
-        category_id: 10,
+        category_id: 13,
         created_at: new Date()
       },
       {
         title: 'Umrah plus turki',
         image_url: 'images/galeri/galeri2.png',
         description: 'Stunning architecture and cityscapes',
-        category_id: 12,
+        category_id: 15,
         created_at: new Date()
       },
       {
         title: 'Haji',
         image_url: 'images/galeri/galeri3.png',
         description: 'Innovative technology and gadgets',
-        category_id: 11,
+        category_id: 14,
         created_at: new Date()
       }
     ], {});

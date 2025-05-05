@@ -7,8 +7,8 @@ const galleryCategoryService = require("../../services/galleries/galleryCategory
 // TAMPILAN LIST
 router.get("/", auth.ensureAuth, loadSidebar, async (req, res) => {
   try {
-    const galleries = await GalleryService.getAllGallery();
-    const galleryCategory = await galleryCategoryService.getAllGalleryCategory();
+    // const galleries = await GalleryService.getAllGallery();
+    const galleryCategory = await galleryCategoryService.getAllGalleryCategory() ?? [];
 
     res.render("home", {
       link: "galleries/gallery_list",
@@ -16,8 +16,7 @@ router.get("/", auth.ensureAuth, loadSidebar, async (req, res) => {
       user: req.session.user,
       username: req.session.user?.username || "Guest",
       fullname: req.session.user?.fullname || "Guest",
-      galleries,
-      galleryCategory
+      ...(galleryCategory ? { galleryCategory } : {})
     });
   } catch (error) {
     console.error("❌ Error loading gallery:", error.message);
