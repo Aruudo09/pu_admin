@@ -74,20 +74,25 @@ $(document).ready(function() {
     const url = isUpdate ? `/api/user/${id}` : `/api/user`;
     const method = isUpdate ? "PUT" : "POST";
 
+    const body = {
+      fullname,
+      username,
+      id_level: parseInt(id_level),
+      is_active,
+      app
+    };
+
+    if (!isUpdate) {
+      body.password = password; // Hanya kirim password saat update
+    }
+
       try {
         const res = await fetch(url, {
           method: method,
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({
-            fullname,
-            username,
-            password,
-            id_level: parseInt(id_level),
-            is_active,
-            app
-          }),
+          body: JSON.stringify(body),
         });
   
         const data = await res.json();
@@ -103,6 +108,12 @@ $(document).ready(function() {
       }
     });
 
+    document.getElementById("addUserBtn").addEventListener("click", () => {
+      document.getElementById("userForm").reset(); // Reset form
+      document.getElementById("password").style.display = "block"; // Tampilkan password field
+      document.getElementById("passwordDiv").style.display = "block"; // Tampilkan password field
+    });
+
       // MENGISI VALUE FORM (EDIT)
     document.getElementById("userTable").addEventListener("click", async (e) => {
       if (e.target.closest(".userEdit")) {
@@ -114,6 +125,8 @@ $(document).ready(function() {
         const res = await fetch(`/api/user/${id}`);
         const data = await res.json();
         console.log(data);
+        document.getElementById("password").style.display = "none";
+        document.getElementById("passwordDiv").style.display = "none"; // Sembunyikan password field
     
         if (data.status === "success") {
         const user = data.data;
@@ -121,7 +134,6 @@ $(document).ready(function() {
         document.getElementById("hidden_id_user").value = user.id;
         document.getElementById("fullname").value = user.fullname;
         document.getElementById("username").value = user.username;
-        document.getElementById("password").value = user.password;
         document.getElementById("id_level").value = user.id_level;
         document.getElementById("is_active").value = user.is_active;
         document.getElementById("app").value = user.app;
