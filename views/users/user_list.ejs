@@ -29,6 +29,7 @@
               <div class="d-flex align-items-center">
                 <h4 class="card-title">Users Table</h4>
                 <a
+                  id="addUserBtn"
                   data-bs-toggle="modal"
                   data-bs-target="#userFormModal"
                   class="btn btn-primary btn-round ms-auto"
@@ -148,7 +149,7 @@
                             />
                           </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-6" id="passwordDiv">
                           <div class="form-group form-group-default">
                             <label>Password</label>
                             <input
@@ -162,11 +163,10 @@
                         <div class="form-group form-group-default">
                           <label>ID Level</label>
                           <select name="id_level" id="id_level" class="form-select">
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                            <option value="5">5</option>
+                            <option selected disabled>Pilih Opsi....</option>
+                            <% userlevels.forEach(function(level) { %>
+                              <option value="<%= level.id_level %>"><%= level.nama_level %></option>
+                            <% }); %>
                           </select>
                         </div>
                       </div>
