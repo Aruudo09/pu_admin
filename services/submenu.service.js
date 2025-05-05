@@ -3,10 +3,7 @@ const SubmenuRepository = require("../repositories/submenu.repository");
 class SubmenuService {
   async getAllSubmenu() {
     const submenu = await SubmenuRepository.getAllSubmenu();
-    if (submenu.length === 0) {
-      throw new Error("No submenu found");
-    }
-    return submenu;
+    return submenu || []; // jika null/undefined, tetap kembalikan array kosong
   }
 
   async getAllSubmenuDatatables({ draw, start, length, search, order, columns }) {
@@ -30,10 +27,7 @@ class SubmenuService {
 
   async getSubmenuById(id_submenu) {
     const submenu = await SubmenuRepository.getSubmenuById(id_submenu);
-    if (!submenu) {
-      throw new Error("Submenu not found");
-    }
-    return submenu;
+    return submenu || []; // jika null/undefined, tetap kembalikan array kosong
   }
 
   async createSubmenu(subMenuData) {

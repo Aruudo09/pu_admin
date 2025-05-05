@@ -6,10 +6,7 @@ const userlevelRepository = require("../repositories/userlevel.repository");
 class UserlevelService {
   async getAllUserlevel() {
     const userlevel = await UserlevelRepository.getAllUserlevels();
-    if (userlevel.length === 0) {
-      throw new Error("No userlevel found");
-    }
-    return userlevel;
+    return userlevel || []; // jika null/undefined, tetap kembalikan array kosong
   }
 
   async getAllUserlevelDatatables({ draw, start, length, search, order, columns, id_level }) {
@@ -34,10 +31,7 @@ class UserlevelService {
 
   async getUserlevelById(id_level) {
     const userlevel = await UserlevelRepository.getUserlevelById(id_level);
-    if (!userlevel) {
-      throw new Error("Userlevel not found");
-    }
-    return userlevel;
+    return userlevel || []; // jika null/undefined, tetap kembalikan array kosong
   }
 
   async createUserlevel(userlevelData) {
