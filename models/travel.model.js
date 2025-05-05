@@ -48,6 +48,10 @@ module.exports = (sequelize, DataTypes) => {
       createdAt: 'created_at',
       updatedAt: false,
     });
+
+    Travels.associate = (models) => {
+      Travels.hasMany(models.travel_reviews, { foreignKey: 'travel_id', as: 'travel' });
+   };
   
     return Travel;
   };
