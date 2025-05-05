@@ -3,10 +3,7 @@ const GalleryRepository = require("../../repositories/galleries/gallery.reposito
 class Gallery {
     async getAllGallery() {
         const gallery = await GalleryRepository.getAllGallery();
-        if (gallery.length === 0) {
-            throw new Error("No gallery found");
-        }
-        return gallery;
+        return gallery || []; // jika null/undefined, tetap kembalikan array kosong
     }
 
     async getAllGalleryDatatables({ draw, start, length, search, order, columns }) {
@@ -30,10 +27,7 @@ class Gallery {
 
     async getGalleryById(id) {
         const gallery = await GalleryRepository.getGalleryById(id);
-        if (!gallery) {
-            throw new Error("Gallery not found");
-        }
-        return gallery;
+        return gallery || []; // jika null/undefined, tetap kembalikan array kosong
     }
 
     async getGalleryByCategory(slug) {

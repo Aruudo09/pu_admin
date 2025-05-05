@@ -27,10 +27,10 @@ class GalleryCategory {
 
     async getGalleryCategoryById(id) {
         const galleryCategory = await GalleryCategoryRepository.getGalleryCategoryById(id);
-        if (!galleryCategory) {
-            throw new Error("Gallery Category not found");
-        }
-        return galleryCategory;
+        // if (!galleryCategory) {
+        //     throw new Error("Gallery Category not found");
+        // }
+        return galleryCategory || [];
     }
 
     async createGalleryCategory(galleryData) {

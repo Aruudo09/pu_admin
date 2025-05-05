@@ -5,10 +5,7 @@ class UserService {
   async getAllUsers() {
     try {
       const users = await UserRepository.getAllUsers();
-      if (users.length === 0) {
-        throw new Error("No users found"); // Menangani kasus data kosong
-      }
-      return users;
+      return users || []; // Jika null/undefined, tetap kembalikan array kosong
     } catch (error) {
       throw new Error(error.message); // Melempar error ke controller
     }
@@ -36,10 +33,7 @@ class UserService {
   async getUserById(id) {
     try {
       const user = await UserRepository.getUserById(id);
-      if (!user) {
-        throw new Error("User not found"); // Melempar error jika user tidak ditemukan
-      }
-      return user;
+      return user || []; // Jika null/undefined, tetap kembalikan array kosong
     } catch (error) {
       throw new Error(error.message);
     }

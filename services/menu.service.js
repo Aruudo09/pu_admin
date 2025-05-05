@@ -3,10 +3,7 @@ const MenuRepository = require("../repositories/menu.repository");
 class MenuService {
   async getAllMenu() {
     const menu = await MenuRepository.getAllMenu();
-    if (menu.length === 0) {
-      throw new Error("No menu found");
-    }
-    return menu;
+    return menu || []; // jika null/undefined, tetap kembalikan array kosong
   }
 
   async getAllMenuDatatables({ draw, start, length, search, order, columns }) {
@@ -31,10 +28,7 @@ class MenuService {
 
   async getMenuById(id_menu) {
     const menu = await MenuRepository.getMenuById(id_menu);
-    if (!menu) {
-      throw new Error("Menu not found");
-    }
-    return menu;
+    return menu || []; // jika null/undefined, tetap kembalikan array kosong
   }
 
   async createMenu(menuData) {
