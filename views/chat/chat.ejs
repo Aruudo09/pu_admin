@@ -18,7 +18,7 @@
     <ul id="messages">
       <% if (messages && messages.length > 0) { %>
         <% messages.forEach(msg => { %>
-          <li><%= msg.message %></li>
+          <li><%= msg.username %>: <%= msg.message %></li>
         <% }) %>
       <% } %>
     </ul>
