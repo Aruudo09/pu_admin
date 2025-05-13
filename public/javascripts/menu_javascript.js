@@ -10,7 +10,7 @@ document.addEventListener("DOMContentLoaded", () => {
       url: "/api/menu/datatables", // Backend endpoint
       type: "GET",
       dataSrc: function (json) {
-        console.log("DataTables response:", json); // Debugging log
+        // console.log("DataTables response:", json); // Debugging log
         return json.data; // Extract the data array
       },
     },
@@ -24,7 +24,7 @@ document.addEventListener("DOMContentLoaded", () => {
         data: "id_menu",
         render: function (data, type, row) {
 
-          console.log("Data ID:", row); // Debugging log
+          // console.log("Data ID:", row); // Debugging log
           
           let buttons = `<div class="d-flex gap-2 justify-content-center">`;
 

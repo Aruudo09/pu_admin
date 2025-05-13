@@ -14,7 +14,7 @@ class TravelReviewsController {
   async getAllTravelReviewsDatatables(req, res) {
     try {
       const { akses = {} } = res.locals;
-      console.log("akses", akses);
+      // console.log("akses", akses);
 
       if (akses.view_level !== 'Y') {
         return res.status(403).json({ error: "Akses ditolak" });
