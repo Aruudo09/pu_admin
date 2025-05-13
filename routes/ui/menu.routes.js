@@ -12,7 +12,7 @@ router.get("/", auth.ensureAuth, loadSidebar, async (req, res) => {
             link: "menu/menu_list",
             jslink: "javascripts/menu_javascript.js",
             user: req.session.user,
-            username: req.session.user?.usernmae || "Guest",
+            username: req.session.user?.username || "Guest",
             fullname: req.session.user?.fullname || "Guest",
             menu
         });  
