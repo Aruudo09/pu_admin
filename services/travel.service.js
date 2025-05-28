@@ -2,24 +2,14 @@ const TravelRepository = require("../repositories/travel.repository");
 
 class TravelService {
   async getAllTravels() {
-    try {
       const travels = await TravelRepository.getAllTravels();
-      if (travels.length === 0) {
-        throw new Error("No travels found"); // Menangani kasus data kosong
-      }
-      return travels;
-    } catch (error) {
-      throw new Error(error.message); // Melempar error ke controller
-    }
+      return travels || [];
   }
 
   async getTravelById(id) {
     try {
       const travel = await TravelRepository.getTravelById(id);
-      if (!travel) {
-        throw new Error("Travel not found"); // Melempar error jika travel tidak ditemukan
-      }
-      return travel;
+      return travel || [];
     } catch (error) {
       throw new Error(error.message);
     }

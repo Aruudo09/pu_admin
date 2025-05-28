@@ -36,15 +36,15 @@
                           <i id="eyeIcon" class="fa-solid fa-eye"></i>
                         </span>
                     </div>
-                        <div class="extra-input">
-                            <div class="group">
-                                <input type="checkbox" id="rememberMe" hidden>
-                                <label class="custom-checkbox" for="rememberMe">Ingat saya</label>               
-                            </div>
-                            <div class="group">
-                                <a href="">Lupa Sandi?</a>             
-                            </div>
+                    <div class="extra-input">
+                        <div class="group">
+                            <input type="checkbox" id="rememberMe" hidden>
+                            <label class="custom-checkbox" for="rememberMe">Ingat saya</label>               
                         </div>
+                        <div class="group">
+                            <a href="">Lupa Sandi?</a>
+                        </div>
+                    </div>
                     <div class="footer">
                         <button type="submit">Masuk</button>
                         <p>Tidak punya akun?</p>
@@ -52,7 +52,7 @@
                     </div>
                 </form>
             </div>
-            <div class="form-container" id="register" style="display: none;">
+            <div class="form-container" id="register" style="display: none; margin-top: -10px">
                 <form action="">
                     <div class="header-register">
                         <h1>Buat Akun</h1>
@@ -144,6 +144,8 @@
     $('#login').addClass('show');
 
     $('#register-button').click(function (e) {
+        $('#email').val('');
+        $('#passwordInput2').val('');
       e.preventDefault();
       setTimeout(function () {
           $('#login').hide();
