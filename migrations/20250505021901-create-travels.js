@@ -36,8 +36,16 @@ module.exports = {
         type: Sequelize.STRING(20),
         allowNull: false,
       },
+      website: {
+        type: Sequelize.STRING(100),
+        allowNull: false,
+      },
       email: {
         type: Sequelize.STRING(60),
+        allowNull: false,
+      },
+      is_verified: {
+        type: Sequelize.TINYINT,
         allowNull: false,
       },
       address: {

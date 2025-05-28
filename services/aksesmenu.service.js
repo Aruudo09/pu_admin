@@ -10,7 +10,6 @@ class AksesmenuService {
   }
 
   async getAksesmenuByLevel(id_level) {
-
     const aksesmenu = await AksesmenuRepository.getAksesmenuByLevel(id_level);
     if (!aksesmenu || aksesmenu.length === 0) {
       throw new Error("No aksesmenu found for the given level");

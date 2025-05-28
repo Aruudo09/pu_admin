@@ -2,20 +2,15 @@ const TravelReviewsRepository = require("../repositories/travelreviews.repositor
 
 class TravelReviewsService {
   async getAllTravelReviews() {
-    try {
       const reviews = await TravelReviewsRepository.getAllTravelReviews();
-      if (reviews.length === 0) throw new Error("No travel reviews found");
-      return reviews;
-    } catch (error) {
-      throw new Error(error.message);
-    }
-  }
+      return reviews || [];
+}
 
   async getTravelReviewsById(id) {
     try {
-      const review = await TravelReviewsRepository.getTravelReviewsById(id);
-      if (!review) throw new Error("Travel reviews not found");
-      return review;
+      const reviews = await TravelReviewsRepository.getTravelReviewsById(id);
+      if (!reviews) throw new Error("Travel reviews not found");
+      return reviews;
     } catch (error) {
       throw new Error(error.message);
     }

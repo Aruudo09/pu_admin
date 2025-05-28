@@ -365,6 +365,7 @@ footer p {
 @media (max-width: 498px){
     body {
         font-size: 60%;
+        background-position: -350px 0px;
     }
 
     .row-1 img {
@@ -374,6 +375,7 @@ footer p {
     }
 
     main .row-2 .form-container {
+        margin-top: 15%;
         width: 85%;
         padding: 20px 30px 50px;
     }
