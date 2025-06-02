@@ -24,22 +24,22 @@
               <table id="travelreviews" class="display table table-striped table-hover w-100" style="width: 100%">
                 <thead>
                   <tr>
+                    <th>Action</th>
                     <th>Travel ID</th>
                     <th>User ID</th>
                     <th>Rating</th>
                     <th>Comment</th>
                     <th>Dibuat Pada</th>
-                    <th>Action</th>
                   </tr>
                 </thead>
                 <tfoot>
                   <tr>
+                    <th>Action</th>
                     <th>Travel ID</th>
                     <th>User ID</th>
                     <th>Rating</th>
                     <th>Comment</th>
                     <th>Dibuat Pada</th>
-                    <th>Action</th>
                   </tr>
                 </tfoot>
                 <tbody>
@@ -61,9 +61,16 @@
                     <div class="row">
                       <div class="col-md-6">
                         <div class="form-group form-group-default">
-                          <label>Travel ID</label>
+                          <label>Travel</label>
                           <input id="hidden_id" type="hidden" class="form-control">
-                          <input id="travel_id" type="text" class="form-control">
+                          <select id="travel_id" class="form-control select2">
+                            <option value="">Pilih Travel</option>
+                            <% if (typeof travels !== 'undefined' && travels.length > 0) { %>
+                              <% travels.forEach(function(travel) { %>
+                                <option value="<%= travel.id %>"><%= travel.name %></option>
+                              <% }); %>
+                            <% } %>
+                          </select>
                         </div>
                       </div>
                       <div class="col-md-6">

@@ -55,24 +55,24 @@ class TravelService {
     }
   }
 
-    async getAllTravelsDatatables({ draw, start, length, search, order, columns }) {
-        const searchValue = search?.value || "";
+  async getAllTravelsDatatables({ draw, start, length, search, order, columns }) {
+      const searchValue = search?.value || "";
 
-        const { count, rows } = await TravelRepository.getPaginatedTravel({
-            start: parseInt(start, 10) || 0,
-            length: parseInt(length, 10) || 10,
-            search: searchValue,
-            order,
-            columns
-        });
+      const { count, rows } = await TravelRepository.getPaginatedTravel({
+        start: parseInt(start, 10) || 0,
+        length: parseInt(length, 10) || 10,
+        search: searchValue,
+        order,
+        columns
+      });
 
-        return {
-            draw: parseInt(draw, 10),
-            recordsTotal: count,
-            recordsFiltered: count,
-            data: rows
-        };
-    }  
+      return {
+          draw: parseInt(draw, 10),
+          recordsTotal: count,
+          recordsFiltered: count,
+          data: rows
+      };
+  }  
 }
 
 module.exports = new TravelService();

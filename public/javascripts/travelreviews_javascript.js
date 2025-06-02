@@ -14,12 +14,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     },
     columns: [
-      { data: 'travel_id', title: 'Travel ID' },
-      { data: 'user_id', title: 'User ID' },
-      { data: 'rating', title: 'Rating' },
-      { data: 'comment', title: 'Comment' },
-      { data: 'created_at', title: 'Dibuat Pada' },
-      {
+            {
         data: 'id',
         render: function (data, type, row) {
           let buttons = `<div class="d-flex gap-2 justify-content-center">`;
@@ -40,7 +35,12 @@ document.addEventListener("DOMContentLoaded", () => {
           buttons += `</div>`;
           return buttons;
         }
-      }
+      },
+      { data: 'travel_id', title: 'Travel ID' },
+      { data: 'user_id', title: 'User ID' },
+      { data: 'rating', title: 'Rating' },
+      { data: 'comment', title: 'Comment' },
+      { data: 'created_at', title: 'Dibuat Pada' }
     ],
     drawCallback: function () {
       $($.fn.dataTable.tables(true)).DataTable().columns.adjust();

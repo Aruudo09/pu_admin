@@ -15,11 +15,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       },
       columns: [
-        { data: 'title', title: 'Judul' },
-        { data: 'image_url', title: 'URL Gambar' },
-        { data: 'description', title: 'Deskripsi' },
-        { data: 'category_id', title: 'ID Kategori' },
-        { data: 'created_at', title: 'Dibuat Pada' },
         {
           data: 'id',
           render: function (data, type, row) {
@@ -42,7 +37,12 @@ document.addEventListener("DOMContentLoaded", () => {
             buttons += `</div>`;
             return buttons;
           }
-        }
+        },
+        { data: 'title', title: 'Judul' },
+        { data: 'image_url', title: 'URL Gambar' },
+        { data: 'description', title: 'Deskripsi' },
+        { data: 'category_id', title: 'ID Kategori' },
+        { data: 'created_at', title: 'Dibuat Pada' }
       ],
       columnDefs: [
         // { responsivePriority: 1, targets: 0 }, // Title

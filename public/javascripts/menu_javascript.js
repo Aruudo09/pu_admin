@@ -15,11 +15,6 @@ document.addEventListener("DOMContentLoaded", () => {
       },
     },
     columns: [
-      { data: "nama_menu", title: "Nama Menu" },
-      { data: "link", title: "Link" },
-      { data: "icon", title: "Icon" },
-      { data: "urutan", title: "Urutan" },
-      { data: "is_active", title: "Is Active" },
       {
         data: "id_menu",
         render: function (data, type, row) {
@@ -45,6 +40,11 @@ document.addEventListener("DOMContentLoaded", () => {
           return buttons;
         },
       },
+      { data: "nama_menu", title: "Nama Menu" },
+      { data: "link", title: "Link" },
+      { data: "icon", title: "Icon" },
+      { data: "urutan", title: "Urutan" },
+      { data: "is_active", title: "Is Active" },
     ],
     columnDefs: [
       // { responsivePriority: 1, targets: 0 }, // Title

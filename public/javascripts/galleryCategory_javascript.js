@@ -16,9 +16,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       },
       columns: [
-        { data: 'name', title: 'Nama Kategori' },
-        { data: 'slug', title: 'Slug' },
-        { data: 'created_at', title: 'Dibuat Pada' },
         {
           data: 'id',
           render: function (data, type, row) {
@@ -39,7 +36,10 @@ document.addEventListener("DOMContentLoaded", () => {
             buttons += `</div>`;
             return buttons;
           }
-        }
+        },
+        { data: 'name', title: 'Nama Kategori' },
+        { data: 'slug', title: 'Slug' },
+        { data: 'created_at', title: 'Dibuat Pada' }
       ],
       columnDefs: [
         // { responsivePriority: 1, targets: 0 }, // Title

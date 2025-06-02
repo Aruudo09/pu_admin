@@ -14,17 +14,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     },
     columns: [
-      { data: 'name', title: 'Nama Travel' },
-      { data: 'description', title: 'Deskripsi' },
-      { data: 'logo_url', title: 'Logo URL' },
-      { data: 'contact_person', title: 'Contact Person' },
-      { data: 'phone', title: 'Phone' },
-      { data: 'email', title: 'Email' },
-      { data: 'address', title: 'Address' },
-      { data: 'website', title: 'Website' },
-      { data: 'is_verified', title: 'Is Verified' },
-      { data: 'created_at', title: 'Dibuat Pada' },
-      {
+            {
         data: 'id',
         render: function (data, type, row) {
           // console.log("Data ID:", row); // Debugging log
@@ -46,12 +36,31 @@ document.addEventListener("DOMContentLoaded", () => {
           buttons += `</div>`;
           return buttons;
         }
-      }
+      },
+      { data: 'name', title: 'Nama Travel' },
+      { data: 'description', title: 'Deskripsi' },
+      { data: 'logo_url', title: 'Logo URL' },
+      { data: 'contact_person', title: 'Contact Person' },
+      { data: 'phone', title: 'Phone' },
+      { data: 'email', title: 'Email' },
+      { data: 'address', title: 'Address' },
+      { data: 'website', title: 'Website' },
+      { data: 'is_verified', title: 'Is Verified' },
+      { data: 'created_at', title: 'Dibuat Pada' }
     ],
     drawCallback: function () {
       // Force redraw untuk sync header & body
       $($.fn.dataTable.tables(true)).DataTable().columns.adjust();
-    }
+    },
+    "columnDefs": [
+      {
+        "targets": [1,2,3,4,5,6,7,8,9,10],
+        "className": 'dt-body-nowrap'
+      }, {
+        "targets": [0, 1],
+        "orderable": false,
+      },
+      ]
   });
 
   // CREATE OR UPDATE

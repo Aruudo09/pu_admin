@@ -15,9 +15,6 @@ $(document).ready(function() {
       },
     },
     columns: [
-      { data: "fullname", title: "Nama Lengkap" },
-      { data: "username", title: "Username" },
-      { data: "id_level", title: "ID Level" },
       {
         data: "id",
         render: function (data, type, row) {
@@ -41,6 +38,9 @@ $(document).ready(function() {
           return buttons;
         },
       },
+      { data: "fullname", title: "Nama Lengkap" },
+      { data: "username", title: "Username" },
+      { data: "id_level", title: "ID Level" }
     ],
     columnDefs: [
       // { responsivePriority: 1, targets: 0 }, // Title
