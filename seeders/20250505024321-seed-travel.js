@@ -1,38 +1,28 @@
 'use strict';
 
+const { name } = require('ejs');
+
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up (queryInterface, Sequelize) {
-    /**
-     * Add seed commands here.
-     *
-     * Example:
-     * await queryInterface.bulkInsert('People', [{
-     *   name: 'John Doe',
-     *   isBetaMember: false
-     * }], {});
-    */
-    await queryInterface.bulkInsert('gallery_categories', [
+    await queryInterface.bulkInsert('travels', [
       {
-        name: 'tes',
-        description: 'tes',
-        logo_url: 'tes',
-        contact_person: 'tes',
-        phone: 'tes',
-        email: 'tes',
-        address: 'tes',
-        created_at: new Date()
+        name: 'Umrah Package 2025',
+        description: 'A complete Umrah package including flights, hotels, and transportation.',
+        logo_url: 'https://example.com/logo-umrah-package-2025.png',
+        contact_person: 'John Doe',
+        phone: '+1234567890',
+        website: 'https://example.com/umrah-package-2025',
+        email: 'www.smackdown.com',
+        is_verified: 1,
+        address: '123 Umrah Street, Makkah, Saudi Arabia',
+        created_at: new Date(),
+        updated_at: new Date()
       }
     ], {});
   },
 
   async down (queryInterface, Sequelize) {
-    /**
-     * Add commands to revert seed here.
-     *
-     * Example:
-     * await queryInterface.bulkDelete('People', null, {});
-     */
     await queryInterface.bulkDelete('travels', null, {});
   }
 };

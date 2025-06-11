@@ -3,35 +3,26 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up (queryInterface, Sequelize) {
-    /**
-     * Add seed commands here.
-     *
-     * Example:
-     * await queryInterface.bulkInsert('People', [{
-     *   name: 'John Doe',
-     *   isBetaMember: false
-     * }], {});
-    */
     await queryInterface.bulkInsert('galleries', [
       {
         title: 'Umrah',
         image_url: 'images/galeri/galeri1.png',
         description: 'Beautiful landscapes and wildlife',
-        category_id: 13,
+        category_id: 1,
         created_at: new Date()
       },
       {
         title: 'Umrah plus turki',
         image_url: 'images/galeri/galeri2.png',
         description: 'Stunning architecture and cityscapes',
-        category_id: 15,
+        category_id: 2,
         created_at: new Date()
       },
       {
         title: 'Haji',
         image_url: 'images/galeri/galeri3.png',
         description: 'Innovative technology and gadgets',
-        category_id: 14,
+        category_id: 3,
         created_at: new Date()
       }
     ], {});

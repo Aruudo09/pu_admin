@@ -46,11 +46,12 @@ module.exports = (sequelize, DataTypes) => {
       tableName: "travels", // 👈 Tambahkan ini agar Sequelize pakai nama tabel yang benar
       timestamps: true, // Hapus jika pakai createdAt & updatedAt
       createdAt: 'created_at',
-      updatedAt: 'updated_at',
+      updatedAt: false,
     });
 
     Travel.associate = (models) => {
       Travel.hasMany(models.TravelReviews, { foreignKey: 'travel_id', as: 'travel' });
+      Travel.hasMany(models.UmrahPackage, { foreignKey: 'travel_agency_id', as: 'packages' });
    };
   
     return Travel;
