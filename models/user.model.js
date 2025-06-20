@@ -1,3 +1,5 @@
+const { create } = require("../repositories/chat.repository");
+
 module.exports = (sequelize, DataTypes) => {
     const User = sequelize.define("User", {
       id: {
@@ -28,11 +30,23 @@ module.exports = (sequelize, DataTypes) => {
       app: {
         type: DataTypes.ENUM('N', 'Y'),
         allowNull: true,
+      },
+      createdAt: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: DataTypes.NOW,
+      },
+      updatedAt: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: DataTypes.NOW,
       }
     },
     {
       tableName: "tbl_user", // 👈 Tambahkan ini agar Sequelize pakai nama tabel yang benar
-      timestamps: false // Hapus jika pakai createdAt & updatedAt
+      timestamps: true, // Hapus jika pakai createdAt & updatedAt
+      createdAt: 'createdAt',
+      updatedAt: 'updatedAt'
     });
   
     return User;

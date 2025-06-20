@@ -1,38 +1,45 @@
 const path = require("path");
-const bcrypt = require("bcrypt");
-const { User } = require("../models");
+const authService = require("../services/auth.service");
 
 class AuthController {
   showLoginForm(req, res) {
-    res.render("login"); // akan mencari login.ejs di folder /views
+    res.render("login", { error: null });
   }
 
   async login(req, res) {
     const { username, password } = req.body;
-  
+
     try {
-      const user = await User.findOne({ where: { username } });
-  
-      if (!user) {
-        return res.render("login", { error: "Username tidak ditemukan" });
-      }
-  
-      const isMatch = await bcrypt.compare(password, user.password);
-  
-      if (!isMatch) {
-        return res.render("login", { error: "Password salah" });
-      }
-  
+      const { user } = await authService.login(username, password);
+
       req.session.user = {
         id: user.id,
         username: user.username,
-        fullname: user.fullname, // ini penting kalau kamu mau pakai fullname
+        fullname: user.fullname,
         id_level: user.id_level,
       };
+
       return res.redirect("/dashboard");
+
     } catch (error) {
-      console.error(error);
-      return res.render("login", { error: "Terjadi kesalahan pada server" });
+      console.error(error.message);
+      return res.render("login", { error: error.message });
+    }
+  }
+
+  async registerUser(req, res) {
+    try {
+      const result = await authService.registerUser(req.body);
+      if (result.success) {
+        res.render("login", {
+          error: "Akun berhasil dibuat. Menunggu persetujuan admin.",
+        });
+      } else {
+        res.render("login", { error: result.message });
+      }
+    } catch (err) {
+      console.error(err);
+      res.render("login", { error: "Terjadi kesalahan saat registrasi." });
     }
   }
 

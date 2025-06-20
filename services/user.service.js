@@ -1,5 +1,8 @@
 const UserRepository = require("../repositories/user.repository");
+const UserNotificationRepository = require("../repositories/userNotification.repository");
 const { hashPassword } = require("../utils/hash");
+const { User } = require("../models");
+const { Op } = require("sequelize");
 
 class UserService {
   async getAllUsers() {
@@ -38,6 +41,32 @@ class UserService {
       throw new Error(error.message);
     }
   }
+
+  async getPendingUserNotifications() {
+  // 1. Cari user yang pending
+  const users = await UserRepository.getAllUserNotifications();
+
+  // console.log("Pending Users:", users);
+
+  // 2. Cek dan simpan ke tbl_user_notification
+  for (const user of users) {
+  const existing = await UserNotificationRepository.findByUserId(user.id);
+
+  if (!existing) {
+    const created = await UserNotificationRepository.createNotification({
+      userId: user.id,
+      message: `${user.fullname} (${user.username}) mendaftar dan belum di-approve`
+    });
+
+    console.log("📥 Notifikasi ditambahkan:", created.dataValues);
+  } else {
+    console.log("⚠️ Sudah ada notifikasi untuk user:", user.username);
+  }
+}
+
+  // 3. Ambil notifikasi dari tabel
+  return await UserNotificationRepository.getUnreadNotifications();
+}
 
   async createUser(userData) {
     try {

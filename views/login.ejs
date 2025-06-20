@@ -53,29 +53,32 @@
                 </form>
             </div>
             <div class="form-container" id="register" style="display: none; margin-top: -10px">
-                <form action="">
+                <form action="/register" method="post">
                     <div class="header-register">
                         <h1>Buat Akun</h1>
                     </div>
                     <div class="row">
-                        <input type="text" name="nama" id="nama" placeholder="Nama">
+                        <input type="text" name="username" id="username" placeholder="Username">
                     </div>
                     <div class="row">
-                        <input type="text" name="no_hp" id="no_hp" placeholder="No Handphone">
+                        <input type="text" name="fullname" id="fullname" placeholder="Fullname">
                     </div>
+                    <!-- <div class="row">
+                        <input type="text" name="no_hp" id="no_hp" placeholder="No Handphone">
+                    </div> -->
                     <div class="row">
                         <input type="text" name="email" id="email" placeholder="Email">
                     </div>
                     <div class="row password-row">
-                        <input type="password" id="passwordInput2" placeholder="Password">
+                        <input type="password" name="password" id="passwordInput2" placeholder="Password">
                         <span id="togglePassword2" class="toggle-icon">
-                          <i id="eyeIcon" class="fa-solid fa-eye"></i>
+                          <i id="eyeIcon2" class="fa-solid fa-eye"></i>
                         </span>
                     </div>
                     <div class="row password-row">
-                        <input type="password" id="passwordInput3" placeholder="Confirm Password">
+                        <input type="password" name="confirmPassword" id="passwordInput3" placeholder="Confirm Password">
                         <span id="togglePassword3" class="toggle-icon">
-                          <i id="eyeIcon" class="fa-solid fa-eye"></i>
+                          <i id="eyeIcon3" class="fa-solid fa-eye"></i>
                         </span>
                     </div>
                         <div class="extra-input">
@@ -115,15 +118,11 @@
             $eyeIcon.toggleClass('fa-eye fa-eye-slash');
         });
 
-        $('#togglePassword2').on('click', function() {
+        $('#togglePassword2').on('click', function () {
             const $passwordInput = $('#passwordInput2');
-            const $eyeIcon = $('#eyeIcon');
-            
-            // Toggle type input
+            const $eyeIcon = $(this).find('i'); // pakai find daripada id duplikat
             const isPassword = $passwordInput.attr('type') === 'password';
             $passwordInput.attr('type', isPassword ? 'text' : 'password');
-            
-            // Toggle icon class
             $eyeIcon.toggleClass('fa-eye fa-eye-slash');
         });
 
@@ -176,7 +175,6 @@
             $('#login').removeClass('show');
         }
   });
-
 
 </script>
   

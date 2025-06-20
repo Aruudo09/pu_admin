@@ -6,6 +6,17 @@ class UserRepository {
     return await User.findAll();
   }
 
+  async getAllUserNotifications() {
+    return await User.findAll({
+      where: {
+        [Op.or]: [
+          { is_active: 'N' },
+          { id_level: 1 }
+        ]
+      }
+    });
+  }
+
   async getPaginatedUsers({ start, length, search, order, columns }) {
     const where = {
       ...(search && {
@@ -38,6 +49,10 @@ class UserRepository {
 
   async getUserById(id) {
     return await User.findByPk(id);
+  }
+
+  async getUserByUsername(username) {
+    return await User.findOne({ where: { username } });
   }
 
   async createUser(userData) {

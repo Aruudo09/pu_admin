@@ -8,13 +8,14 @@ const fs = require("fs");
 const path = require("path");
 const http = require("http"); // Tambahan
 const { Server } = require("socket.io"); // Tambahan
+const { injectUser } = require("./middleware"); // Pastikan middleware ini ada
 
 const app = express();
 const server = http.createServer(app); // Ganti dari app.listen
 const io = new Server(server); // Socket.IO instance
 
 // ===> PASANG socket handler
-const socketHandler = require("./socket");
+const socketHandler = require("./utils/socket");
 socketHandler(io); // aktifkan socket listener
 // <===
 
@@ -28,14 +29,15 @@ app.use(
   })
 );
 
+app.use(injectUser); // ⬅️ Middleware global
 app.use(express.static(path.join(__dirname, "public")));
 
 // 🌐 Middleware untuk inject data user ke view
-app.use((req, res, next) => {
-  res.locals.username = req.session.user?.username || null;
-  res.locals.fullname = req.session.user?.fullname || null;
-  next();
-});
+// app.use((req, res, next) => {
+//   res.locals.username = req.session.user?.username || null;
+//   res.locals.fullname = req.session.user?.fullname || null;
+//   next();
+// });
 
 // 📄 Parsing Middleware
 app.use(cors());

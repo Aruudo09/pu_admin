@@ -22,7 +22,7 @@
 <script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
 
 <!-- Bootstrap Notify -->
-<!-- <script src="/assets/js/plugin/bootstrap-notify/bootstrap-notify.min.js"></script> -->
+<script src="/assets/js/plugin/bootstrap-notify/bootstrap-notify.min.js"></script>
 
 <!-- jQuery Vector Maps -->
 <script src="/assets/js/plugin/jsvectormap/jsvectormap.min.js"></script>
@@ -49,6 +49,45 @@
 <% if (typeof jslink2 !== 'undefined') { %>
   <script src="<%= jslink2 %>"></script>
 <% } %>
+
+<script src="/socket.io/socket.io.js"></script>
+<script>
+  // Pastikan variabel socket sudah didefinisikan sebelumnya
+  function testNotif() {
+    console.log("Memicu notifikasi user baru...");
+    socket.emit('trigger_fake_register');
+  }
+</script>
+
+<script>
+  const socket = io();
+
+  // Ambil data user dari template EJS (pastikan variabel ada di res.locals)
+  const user = {
+    username: "<%= username %>",
+    id_level: 1 // Ganti dengan: <%= id_level %> jika kamu inject id_level dari backend
+  };
+
+  // Join ke room admin jika user adalah admin
+  socket.emit('join_admin_room', user);
+
+  // Terima notifikasi user baru
+  socket.on('user_registered', (data) => {
+    console.log("Notifikasi user baru:", data);
+
+    // Tambahkan ke UI notifikasi (misal ke elemen #notif)
+    const notif = document.getElementById('notif');
+    if (notif) {
+      const li = document.createElement('li');
+      li.textContent = `${data.fullname} (${data.username}) mendaftar.`;
+      notif.appendChild(li);
+    }
+
+    // Atau tampilkan alert
+    alert(`${data.fullname} mendaftar! Silakan review dan approve.`);
+  });
+</script>
+
 <script>
     document.addEventListener('DOMContentLoaded', () => {
   const currentPath = window.location.pathname;

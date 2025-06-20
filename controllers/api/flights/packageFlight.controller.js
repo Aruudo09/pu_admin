@@ -4,7 +4,7 @@ const packageFlightService = require("../../../services/flights/packageFlight.se
 class PackageFlightController {
   async getAllPackageFlights(req, res) {
     try {
-      const packageFlights = await packageFlightService.getAllPackageFlights();
+      const packageFlights = await packageFlightService.getAllP;
       return response.success(res, "All package flights fetched", packageFlights);
     } catch (error) {
       return response.error(res, error.message);

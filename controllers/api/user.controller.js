@@ -44,6 +44,16 @@ class UserController {
       return response.notFound(res, error.message);
     }
   }
+  
+  async getPendingUserNotifications(req, res) {
+  try {
+    const notifications = await userService.getPendingUserNotifications();
+    return response.success(res, "Pending user notifications fetched", notifications);
+  } catch (error) {
+    return response.error(res, error.message);
+  }
+}
+
 
   async createUser(req, res) {
     try {
