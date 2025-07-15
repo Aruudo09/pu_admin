@@ -44,15 +44,44 @@ class UserController {
       return response.notFound(res, error.message);
     }
   }
+
+  async getUnreadNotifications(req, res) {
+    const user = req.session?.user;
+
+    if (!user || user.id_level !== 1) {
+    return res.status(403).json({
+      status: 'error',
+      message: 'Notifikasi hanya tersedia untuk admin'
+    });
+  }
+
+    try {
+      const Notifications = await userService.getUnreadNotifications();
+      return response.success(res, "All notification fetched", Notifications)
+    } catch (error) {
+      return response.error(res, error.message);
+    }
+  }
   
-  async getPendingUserNotifications(req, res) {
+async getPendingUserNotifications(req, res) {
+  const user = req.session?.user;
+
+  if (!user || user.id_level !== 1) {
+    return res.status(403).json({
+      status: 'error',
+      message: 'Notifikasi hanya tersedia untuk admin'
+    });
+  }
+
   try {
-    const notifications = await userService.getPendingUserNotifications();
+    const io = req.app.get("io");
+    const notifications = await userService.getPendingUserNotifications(io);
     return response.success(res, "Pending user notifications fetched", notifications);
   } catch (error) {
     return response.error(res, error.message);
   }
 }
+
 
 
   async createUser(req, res) {
@@ -78,10 +107,19 @@ class UserController {
       await userService.deleteUser(req.params.id);
       return response.success(res, "User deleted successfully");
     } catch (error) {
-      res.status(404).json({ message: error.message });
+      // res.status(404).json({ message: error.message });
       return response.notFound(res, error.message);
     }
   }
+
+  async approveUser(req, res) {
+  try {
+    await userService.approveUser(req.params.id);
+    return response.success(res, "User approved successfully");
+  } catch (error) {
+    return response.error(res, error.message);
+  }
+}
 }
 
 module.exports = new UserController();

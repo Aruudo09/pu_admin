@@ -1,10 +1,10 @@
 const express = require("express");
 const router = express.Router();
-const { auth, loadSidebar } = require("../../middleware");
+const { auth, loadSidebar, loadNotification } = require("../../middleware");
 const Travel = require("../../services/travel.service");
 
 // TAMPILAN LIST
-router.get("/", auth.ensureAuth, loadSidebar, async (req, res) => {
+router.get("/", auth.ensureAuth, loadSidebar, loadNotification, async (req, res) => {
   try {
     const travels = await Travel.getAllTravels();
 

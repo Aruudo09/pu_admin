@@ -1,7 +1,10 @@
 const userRepository = require("../repositories/user.repository");
-const { getIO } = require("../utils/socket");
+const userNotificationRepository = require("../repositories/userNotification.repository");
+const { getIO } = require("../utils/socketIO");
 const { comparePassword } = require("../utils/hash");
 const bcrypt = require("bcrypt");
+const { sequelize } = require("../models"); // pastikan path relatifnya benar
+
 
 async function login(username, password) {
   const user = await userRepository.getUserByUsername(username);
@@ -32,35 +35,53 @@ async function registerUser(data) {
     return { success: false, message: "Username sudah terdaftar" };
   }
 
-  const hashed = await bcrypt.hash(password, 10);
-  const newUser = await userRepository.createUser({
-    username,
-    fullname,
-    password: hashed,
-    id_level: 2, // default user
-    is_active: "N",
-    app: "N",
-  });
+  const t = await sequelize.transaction();
+  try {
+    const hashed = await bcrypt.hash(password, 10);
 
-  // Emit ke admin
-  getIO().to("admin").emit("user_registered", {
-    id: newUser.id,
-    username: newUser.username,
-    fullname: newUser.fullname,
-    message: "User baru mendaftar dan menunggu persetujuan admin.",
-  });
+    const newUser = await userRepository.registerUser({
+      username,
+      fullname,
+      password: hashed,
+      id_level: 2, // default user
+      is_active: "N",
+      app: "N",
+    }, t);
 
-  return { success: true };
+    await userNotificationRepository.createNotification({
+      userId: newUser.id,
+      message: `${newUser.username} Pendaftaran berhasil. Menunggu persetujuan admin.`,
+      isRead: false,
+    }, t);
+
+    await t.commit();
+
+    // Emit ke admin room
+    getIO().to("admin").emit("user_registered", {
+      id: newUser.id,
+      username: newUser.username,
+      fullname: newUser.fullname,
+      message: "User baru mendaftar dan menunggu persetujuan admin.",
+    });
+
+    return { success: true };
+  } catch (err) {
+    await t.rollback();
+    console.error("Register failed:", err);
+    return { success: false, message: "Gagal mendaftar, coba lagi nanti" };
+  }
 }
 
 async function approveUser(userId) {
   const user = await userRepository.getById(userId);
   if (!user) throw new Error("User tidak ditemukan");
 
-  const updated = await userRepository.update(userId, {
+  const updated = await userRepository.updateUser(userId, {
     is_active: 'Y',
     app: 'Y'
   });
+
+  const delete_notification = await userRepository.deleteNotification(userId)
 
   // Emit notifikasi ke room 'admin'
   getIO().to('admin').emit('user_approved', {
@@ -70,7 +91,7 @@ async function approveUser(userId) {
     message: "Akun sudah diaktifkan",
   });
 
-  return updated;
+  return updated, delete_notification;
 }
 
-module.exports = { login, registerUser, approveUser };
+module.exports = { login, registerUser };

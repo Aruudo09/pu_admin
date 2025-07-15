@@ -48,6 +48,10 @@ module.exports = (sequelize, DataTypes) => {
       createdAt: 'createdAt',
       updatedAt: 'updatedAt'
     });
+
+    User.associate = (models) => {
+      User.belongsTo(models.Userlevel, { foreignKey: 'id_level', as: 'level' });
+    }
   
     return User;
   };

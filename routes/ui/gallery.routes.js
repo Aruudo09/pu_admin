@@ -3,9 +3,10 @@ const router = express.Router();
 const { auth, loadSidebar } = require("../../middleware");
 const GalleryService = require("../../services/galleries/gallery.service");
 const galleryCategoryService = require("../../services/galleries/galleryCategory.service");
+const loadNotification = require("../../middleware/loadNotification");
 
 // TAMPILAN LIST
-router.get("/", auth.ensureAuth, loadSidebar, async (req, res) => {
+router.get("/", auth.ensureAuth, loadSidebar, loadNotification, async (req, res) => {
   try {
     // const galleries = await GalleryService.getAllGallery();
     const galleryCategory = await galleryCategoryService.getAllGalleryCategory() ?? [];

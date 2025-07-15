@@ -35,7 +35,7 @@ class UserlevelService {
   }
 
   async createUserlevel(userlevelData) {
-    const requiredFields = ["id_level", "nama_level"];
+    const requiredFields = ["nama_level"];
     if (!requiredFields.every(field => userlevelData[field])) {
       throw new Error("Semua field wajib diisi");
     }

@@ -2,9 +2,10 @@ const express = require("express");
 const router = express.Router();
 const { auth, loadSidebar } = require("../../middleware");
 const MenuService = require("../../services/menu.service");
+const loadNotification = require("../../middleware/loadNotification");
 
 // TAMPILAN LIST
-router.get("/", auth.ensureAuth, loadSidebar, async (req, res) => {
+router.get("/", auth.ensureAuth, loadSidebar, loadNotification, async (req, res) => {
     try {
         const menu = await MenuService.getAllMenu();
 

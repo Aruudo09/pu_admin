@@ -3,6 +3,7 @@ const UserNotificationRepository = require("../repositories/userNotification.rep
 const { hashPassword } = require("../utils/hash");
 const { User } = require("../models");
 const { Op } = require("sequelize");
+const userNotificationRepository = require("../repositories/userNotification.repository");
 
 class UserService {
   async getAllUsers() {
@@ -42,31 +43,49 @@ class UserService {
     }
   }
 
-  async getPendingUserNotifications() {
-  // 1. Cari user yang pending
-  const users = await UserRepository.getAllUserNotifications();
-
-  // console.log("Pending Users:", users);
-
-  // 2. Cek dan simpan ke tbl_user_notification
-  for (const user of users) {
-  const existing = await UserNotificationRepository.findByUserId(user.id);
-
-  if (!existing) {
-    const created = await UserNotificationRepository.createNotification({
-      userId: user.id,
-      message: `${user.fullname} (${user.username}) mendaftar dan belum di-approve`
-    });
-
-    console.log("📥 Notifikasi ditambahkan:", created.dataValues);
-  } else {
-    console.log("⚠️ Sudah ada notifikasi untuk user:", user.username);
+  async getUnreadNotifications() {
+    try {
+      const notifications = await UserNotificationRepository.getUnreadNotifications();
+      return notifications || [];
+    } catch (error) {
+      throw new Error(error.message);
+    }
   }
-}
 
-  // 3. Ambil notifikasi dari tabel
+
+async getPendingUserNotifications(io) {
+  const users = await UserRepository.getAllUserNotifications();
+  const newNotifs = [];
+
+  for (const user of users) {
+    const existing = await UserNotificationRepository.findByUserId(user.id);
+
+    if (!existing) {
+      const created = await UserNotificationRepository.createNotification({
+        userId: user.id,
+        message: `${user.fullname} (${user.username}) mendaftar dan belum di-approve`
+      });
+
+      console.log("📥 Notifikasi ditambahkan:", created.dataValues);
+      newNotifs.push({
+        username: user.username,
+        fullname: user.fullname
+      });
+    } else {
+      console.log("⚠️ Sudah ada notifikasi untuk user:", user.username);
+    }
+  }
+
+  // Emit hanya jika ada notifikasi baru
+  if (io && newNotifs.length > 0) {
+    newNotifs.forEach((notif) => {
+      io.to('admin').emit('user_registered', notif);
+    });
+  }
+
   return await UserNotificationRepository.getUnreadNotifications();
 }
+
 
   async createUser(userData) {
     try {
@@ -104,12 +123,43 @@ class UserService {
       if (!user) {
         throw new Error("User not found");
       }
+      // HAPUS NOTIFIKASI
+      const notification = await userNotificationRepository.findByUserId(id);
+
+      if (notification) {
+        await UserNotificationRepository.deleteNotification(id);
+      }
+
+      //  HAPUS USER
       await UserRepository.deleteUser(id);
       return { message: "User deleted successfully" };
     } catch (error) {
       throw new Error(error.message);
     }
   }
+
+  async approveUser(id) {
+  try {
+    const user = await UserRepository.getUserById(id);
+    if (!user) {
+      throw new Error("User not found");
+    }
+
+    await UserRepository.updateUser(id, {
+      is_active: 'Y',
+      app: 'Y',
+    });
+
+    // Hapus notifikasi pendaftaran user
+    await UserNotificationRepository.deleteNotification(id);
+
+    return { message: "User approved successfully" };
+  } catch (error) {
+    throw new Error(error.message);
+  }
+}
+
+
 }
 
 module.exports = new UserService();

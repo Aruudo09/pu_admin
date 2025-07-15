@@ -1,5 +1,5 @@
 const { Model, Op } = require("sequelize");
-const { User } = require("../models");
+const { User, Userlevel, UserNotification } = require("../models");
 
 class UserRepository {
   async getAllUsers() {
@@ -24,6 +24,7 @@ class UserRepository {
           { fullname: { [Op.like]: `%${search}%` } },
           { username: { [Op.like]: `%${search}%` } },
           { id_level: { [Op.like]: `%${search}%` } },
+          { is_active: { [Op.like]: `%${search}%` } }
         ],
       }),
       // Add any other filters you need here
@@ -42,6 +43,13 @@ class UserRepository {
       order: sort,
       offset,
       limit,
+      include: [
+        {
+          model: Userlevel,
+          as: 'level',
+          attributes: ['nama_level'], // atau atribut lain yang kamu butuh
+        }
+      ]
     });
 
     return result;
@@ -58,6 +66,11 @@ class UserRepository {
   async createUser(userData) {
     return await User.create(userData);
   }
+
+  async registerUser(data, transaction) {
+    return await User.create(data, { transaction });
+  }
+
 
   async updateUser(id, userData) {
     return await User.update(userData, { where: { id } });
