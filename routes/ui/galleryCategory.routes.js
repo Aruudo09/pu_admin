@@ -1,11 +1,11 @@
 const express = require("express");
 const router = express.Router();
-const { auth, loadSidebar } = require("../../middleware");
+const { auth, loadSidebar, loadNotification } = require("../../middleware");
 const GallerycategoryService = require("../../services/galleries/galleryCategory.service");
 const galleryService = require("../../services/galleries/gallery.service");
 
 // TAMPILAN LIST
-router.get("/", auth.ensureAuth, loadSidebar, async (req, res) => {
+router.get("/", auth.ensureAuth, loadSidebar, loadNotification, async (req, res) => {
   try {
     const galleryCategory = await GallerycategoryService.getAllGalleryCategory();
 

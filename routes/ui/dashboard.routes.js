@@ -10,7 +10,7 @@ router.get("/", ensureAuth, loadSidebar, loadNotification, (req, res) => {
     jslink: "javascripts/javascript.js", // jika kamu load JS eksternal
     user: req.session.user,
     username: req.session.user?.username || "Guest",
-    fullname: req.session.user?.fullname || "Guest",
+    fullname: req.session.user?.fullname || "Guest"
   });
 });
 

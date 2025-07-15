@@ -203,28 +203,28 @@ Circles.create({
 // 	time: 1000,
 // });
 
-fetch('/api/notification/pending')
-  .then(res => res.json())
-  .then(json => {
-	console.log('Pending User Notifications:', json);
-    if (json.status !== 'success' || !Array.isArray(json.data)) {
-      console.warn('Notifikasi gagal:', json.message);
-      return;
-    }
+// fetch('/api/notification/pending')
+//   .then(res => res.json())
+//   .then(json => {
+// 	console.log('Pending User Notifications:', json);
+//     if (json.status !== 'success' || !Array.isArray(json.data)) {
+//       console.warn('Notifikasi gagal:', json.message);
+//       return;
+//     }
 
-    json.data.forEach(user => {
-      $.notify({
-        message: user.message
-      }, {
-        type: 'info',
-        delay: 10000,
-        placement: {
-          from: 'top',
-          align: 'right'
-        }
-      });
-    });
-  });
+//     json.data.forEach(user => {
+//       $.notify({
+//         message: user.message
+//       }, {
+//         type: 'info',
+//         delay: 10000,
+//         placement: {
+//           from: 'top',
+//           align: 'right'
+//         }
+//       });
+//     });
+//   });
 
 
 

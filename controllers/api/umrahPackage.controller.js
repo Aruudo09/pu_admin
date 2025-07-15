@@ -20,6 +20,31 @@ class UmrahPackageController {
     }
   }
 
+  async getAllUmrahPackageDatatables(req, res) {
+    try {
+      const { akses } = res.locals;
+      // console.log("akses", akses);
+  
+      if (akses.view_level !== "Y") {
+        return res.status(403).json({ error: "Akses ditolak" });
+      }
+  
+      const result = await umrahPackageService.getAllUmrahPackageDatatables(req.query);
+      result.data = result.data.map(row => ({
+        ...row.get({ plain: true }),
+        akses: {
+          edit: akses.edit_level === "Y",
+          delete: akses.delete_level === "Y"
+        }
+      }));
+  
+      return response.datatables(res, result);
+    } catch (error) {
+      console.error("Error getAllTravelsDatatables:", error);
+      return response.error(res, error.message);
+    }
+  }
+
   async createUmrahPackage(req, res) {
     try {
       const umrahPackage = await umrahPackageService.createUmrahPackage(req.body);

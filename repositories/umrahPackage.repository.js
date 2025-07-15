@@ -1,19 +1,19 @@
 const { Model, Op } = require("sequelize"); // Import Op for Sequelize operators
-const { UmrahPackage } = require("../models");
+const { UmrahPackage, Travel } = require("../models");
 
 class UmrahPackageRepository {
   async getAllPackages() {
     return await UmrahPackage.findAll();
   }
 
-  async getPaginatedPackages({ start, length, search, order, columns }) {
+  async getPaginatedUmrahPackage({ start, length, search, order, columns }) {
     const where = {
       ...(search && {
         [Op.or]: [
           { name: { [Op.like]: `%${search}%` } },
           { description: { [Op.like]: `%${search}%` } },
           { price: { [Op.like]: `%${search}%` } },
-          { duration: { [Op.like]: `%${search}%` } },
+          { duration_days: { [Op.like]: `%${search}%` } },
           { created_at: { [Op.like]: `%${search}%` } }
         ]
       }),
@@ -31,7 +31,13 @@ class UmrahPackageRepository {
       where,
       order: sort,
       offset,
-      limit
+      limit,
+       include: [
+        {
+          model: Travel,
+          as: 'agency'
+        }
+      ]
     });
 
     return result;

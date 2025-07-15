@@ -1,15 +1,14 @@
 document.addEventListener("DOMContentLoaded", () => {
-  $('#travels').DataTable({
+  $('#umrahPackage').DataTable({
     processing: true,
     serverSide: true,
     responsive: false,
     scrollX: false,
     autowidth: true,
     ajax: {
-      url: '/api/travel/datatables', // Backend endpoint
+      url: '/api/umrahPackage/datatables', // Backend endpoint
       type: 'GET',
       dataSrc: function (json) {
-        // console.log("DataTables response:", json); // Debugging log
         return json.data; // Extract the data array
       }
     },
@@ -22,13 +21,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
           if (row.akses && row.akses.edit) {
             buttons += `
-              <a href="#" class="btn btn-sm btn-warning travelEdit" data-id="${row.id}">
+              <a href="#" class="btn btn-sm btn-warning umrahPackageEdit" data-id="${row.id}">
                 <i class="fa fa-edit"></i>
               </a>`;
           }
           if (row.akses && row.akses.delete) {
             buttons += `
-              <a href="#" class="btn btn-sm btn-danger travelDelete" data-id="${row.id}">
+              <a href="#" class="btn btn-sm btn-danger umrahPackageDelete" data-id="${row.id}">
                 <i class="fa fa-times"></i>
               </a>`;
           }
@@ -37,15 +36,12 @@ document.addEventListener("DOMContentLoaded", () => {
           return buttons;
         }
       },
-      { data: 'name', title: 'Nama Travel' },
+      { data: 'name', title: 'Nama Paket' },
+      { data: 'agency.name', title: 'Nama Travel' },
+      { data: 'package_type', title: 'Tipe Paket' },
+      { data: 'price', title: 'Harga' },
+      { data: 'duration_days', title: 'Durasi' },
       { data: 'description', title: 'Deskripsi' },
-      { data: 'logo_url', title: 'Logo URL' },
-      { data: 'contact_person', title: 'Contact Person' },
-      { data: 'phone', title: 'Phone' },
-      { data: 'email', title: 'Email' },
-      { data: 'address', title: 'Address' },
-      { data: 'website', title: 'Website' },
-      { data: 'is_verified', title: 'Is Verified' },
       { data: 'created_at', title: 'Dibuat Pada' }
     ],
     drawCallback: function () {
@@ -54,7 +50,7 @@ document.addEventListener("DOMContentLoaded", () => {
     },
     "columnDefs": [
       {
-        "targets": [1,2,3,4,5,6,7],
+        "targets": [1,2,3],
         "className": 'dt-body-nowrap'
       }, {
         "targets": [0, 1],
@@ -64,21 +60,18 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // CREATE OR UPDATE
-  document.getElementById("submitTravelBtn").addEventListener("click", async () => {
+  document.getElementById("submitUmrahPackageBtn").addEventListener("click", async () => {
     const id = document.getElementById("hidden_id").value;
     const name = document.getElementById("name").value;
-    const logo_url = document.getElementById("logo_url").value;
+    const travel_agency_id = document.getElementById("travel_agency_id").value;
+    const package_type = document.getElementById("package_type").value;
+    const price = document.getElementById("price").value;
+    const duration_days = document.getElementById("duration_days").value;
     const description = document.getElementById("description").value;
-    const contact_person = document.getElementById("contact_person").value;
-    const phone = document.getElementById("phone").value;
-    const email = document.getElementById("email").value;
-    const address = document.getElementById("address").value;
-    const website = document.getElementById("website").value;
-    const is_verified = document.getElementById("is_verified").value;
 
     // Tentukan URL dan method berdasarkan id
     const isUpdate = id !== "";
-    const url = isUpdate ? `/api/travel/${id}` : `/api/travel`;
+    const url = isUpdate ? `/api/umrahPackage/${id}` : `/api/umrahPackage`;
     const method = isUpdate ? "PUT" : "POST";
 
     try {
@@ -89,14 +82,11 @@ document.addEventListener("DOMContentLoaded", () => {
         },
         body: JSON.stringify({
           name,
-          logo_url,
+          travel_agency_id,
+          package_type,
+          price,
+          duration_days,
           description,
-          contact_person,
-          phone,
-          email,
-          address,
-          website,
-          is_verified: parseInt(is_verified),
         }),
       });
 
@@ -115,30 +105,27 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // MENGISI VALUE FORM (EDIT)
   document.addEventListener("click", async (e) => {
-    if (e.target.closest(".travelEdit")) {
+    if (e.target.closest(".umrahPackageEdit")) {
       e.preventDefault();
-      const btn = e.target.closest(".travelEdit");
+      const btn = e.target.closest(".umrahPackageEdit");
       const id = btn.getAttribute("data-id");
 
       try {
-        const res = await fetch(`/api/travel/${id}`);
+        const res = await fetch(`/api/umrahPackage/${id}`);
         const data = await res.json();
 
         if (data.status === "success") {
-          const travel = data.data;
+          const packages = data.data;
 
-          document.getElementById("hidden_id").value = travel.id;
-          document.getElementById("name").value = travel.name;
-          document.getElementById("logo_url").value = travel.logo_url;
-          document.getElementById("description").value = travel.description;
-          document.getElementById("contact_person").value = travel.contact_person;
-          document.getElementById("phone").value = travel.phone;
-          document.getElementById("email").value = travel.email;
-          document.getElementById("address").value = travel.address;
-          document.getElementById("website").value = travel.website;
-          document.getElementById("is_verified").value = travel.is_verified;
+          document.getElementById("hidden_id").value = packages.id;
+          document.getElementById("name").value = packages.name;
+          document.getElementById("travel_agency_id").value = packages.travel_agency_id;
+          document.getElementById("package_type").value = packages.package_type;
+          document.getElementById("price").value = packages.price;
+          document.getElementById("duration_days").value = packages.duration_days;
+          document.getElementById("description").value = packages.description;
 
-          const modal = new bootstrap.Modal(document.getElementById("travelFormModal"));
+          const modal = new bootstrap.Modal(document.getElementById("umrahPackageFormModal"));
           modal.show();
         } else {
           swal("Gagal", "Travel tidak ditemukan", "error");
@@ -150,16 +137,16 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // RESET SAAT MENUTUP MODAL
-  document.getElementById('travelFormModal').addEventListener('hidden.bs.modal', function () {
+  document.getElementById('umrahPackageFormModal').addEventListener('hidden.bs.modal', function () {
     document.getElementById("travelForm").reset();
     document.getElementById("hidden_id").value = '';
   });
 
   // DELETE
   document.addEventListener("click", (e) => {
-    if (e.target.closest(".travelDelete")) {
+    if (e.target.closest(".umrahPackageDelete")) {
       e.preventDefault();
-      const btn = e.target.closest(".travelDelete");
+      const btn = e.target.closest(".umrahPackageDelete");
       const id = btn.getAttribute("data-id");
 
       swal({
@@ -170,7 +157,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }).then(async (willDelete) => {
         if (willDelete) {
           try {
-            const res = await fetch(`/api/travel/${id}`, {
+            const res = await fetch(`/api/umrahPackage/${id}`, {
               method: "DELETE",
             });
 

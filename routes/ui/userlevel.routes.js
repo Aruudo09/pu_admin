@@ -1,12 +1,12 @@
 const express = require("express");
 const router = express.Router();
-const { auth, loadSidebar } = require("../../middleware");
+const { auth, loadSidebar, loadNotification } = require("../../middleware");
 const UserService = require("../../services/user.service");
 const UserlevelService = require("../../services/userlevel.service");
 const AksesmenuService = require("../../services/aksesmenu.service");
 const AksessubmenuService = require("../../services/aksessubmenu.service");
 
-router.get("/", auth.ensureAuth, loadSidebar, async (req, res) => {
+router.get("/", auth.ensureAuth, loadSidebar, loadNotification, async (req, res) => {
     try {
         const userlevel = await UserlevelService.getAllUserlevel();
         const users = await UserService.getAllUsers();

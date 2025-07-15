@@ -11,7 +11,7 @@ module.exports = {
         allowNull: false,
         references: { model: 'hotels', key: 'id' }
       },
-      location_type: {
+      location: {
         type: Sequelize.ENUM('Mekkah', 'Madinah'),
         allowNull: false
       },

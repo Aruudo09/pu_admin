@@ -30,7 +30,7 @@ module.exports = (sequelize, DataTypes) => {
 
   Hotel.associate = models => {
     Hotel.hasMany(models.HotelFacility, { foreignKey: 'hotel_id' });
-    Hotel.hasMany(models.PackageHotel, { foreignKey: 'hotel_id' });
+    Hotel.hasMany(models.HotelPackage, { foreignKey: 'hotel_id' });
   };
 
   return Hotel;

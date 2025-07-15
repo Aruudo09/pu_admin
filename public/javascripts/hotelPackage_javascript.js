@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-  $('#travels').DataTable({
+  $('#hotelPackage').DataTable({
     processing: true,
     serverSide: true,
     responsive: false,

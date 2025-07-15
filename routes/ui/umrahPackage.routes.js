@@ -1,20 +1,20 @@
 const express = require("express");
 const router = express.Router();
 const { auth, loadSidebar, loadNotification } = require("../../middleware");
-const Travel = require("../../services/travel.service");
+const umrahPackage = require("../../services/umrahPackage.service");
 
 // TAMPILAN LIST
 router.get("/", auth.ensureAuth, loadSidebar, loadNotification, async (req, res) => {
   try {
-    const travels = await Travel.getAllTravels();
+    const packages = await umrahPackage.getAllUmrahPackages();
 
     res.render("home", {
-      link: "travel/travel_list",
-      jslink: "javascripts/travel_javascript.js",
+      link: "umrahPackage/umrahPackage_list",
+      jslink: "javascripts/umrahPackage_javascript.js",
       user: req.session.user,
       username: req.session.user?.username || "Guest",
       fullname: req.session.user?.fullname || "Guest",
-      travels
+      packages
     });
   } catch (error) {
     console.error("❌ Error loading travels:", error.message);

@@ -1,11 +1,11 @@
 const express = require("express");
 const router = express.Router();
-const { auth, loadSidebar } = require("../../middleware");
+const { auth, loadSidebar, loadNotification } = require("../../middleware");
 const UserService = require("../../services/user.service");
 const userlevelService = require("../../services/userlevel.service");
 
 // TAMPILAN LIST
-router.get("/", auth.ensureAuth, loadSidebar, async (req, res) => {
+router.get("/", auth.ensureAuth, loadSidebar, loadNotification, async (req, res) => {
     try {
         const users = await UserService.getAllUsers();
         const userlevels = await userlevelService.getAllUserlevel();

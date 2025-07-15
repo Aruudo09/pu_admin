@@ -1,5 +1,5 @@
 module.exports = (sequelize, DataTypes) => {
-  const PackageHotel = sequelize.define('PackageHotel', {
+  const HotelPackage = sequelize.define('HotelPackage', {
     id: {
       type: DataTypes.INTEGER,
       autoIncrement: true,
@@ -13,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    location_type: {
+    location: {
       type: DataTypes.ENUM('Mekkah', 'Madinah'),
       allowNull: false,
     },
@@ -28,9 +28,9 @@ module.exports = (sequelize, DataTypes) => {
     updatedAt: 'updatedAt',
   });
 
-  PackageHotel.associate = models => {
-    PackageHotel.belongsTo(models.Hotel, { foreignKey: 'hotel_id' });
+  HotelPackage.associate = models => {
+    HotelPackage.belongsTo(models.Hotel, { foreignKey: 'hotel_id' });
   };
 
-  return PackageHotel;
+  return HotelPackage;
 };
