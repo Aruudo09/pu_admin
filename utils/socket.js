@@ -1,42 +1,33 @@
-let ioInstance = null;
-
-module.exports = (io) => {
-  ioInstance = io; // ⬅️ Tambahkan baris ini!
+module.exports = (io, sessionMiddleware) => {
+  // Pasang session middleware ke socket
+  io.use((socket, next) => {
+    sessionMiddleware(socket.request, {}, next);
+  });
 
   io.on('connection', (socket) => {
-    console.log('🟢 User connected');
+    const req = socket.request;
 
-    socket.on('join_admin_room', (user) => {
-      if (user.id_level == 1) {
+    console.log("🟢 Socket connected");
+
+    socket.on('init_user', () => {
+      const user = req.session?.user;
+
+      if (!user) {
+        console.log("❌ Tidak ada user di session");
+        return;
+      }
+
+      if (user.id_level === 1) {
         socket.join('admin');
-        console.log(`👑 ${user.username} joined admin room`);
+        console.log(`👑 ${user.username} masuk ke room admin`);
+        socket.emit('joined_admin_room'); // ⬅️ ini penting!
+      } else {
+        console.log(`🙅‍♂️ ${user.username} bukan admin`);
       }
     });
 
-     // Handler TEST (trigger dari frontend)
-    socket.on("trigger_fake_register", () => {
-      console.log("🚨 Fake register triggered!");
-
-      io.to("admin").emit("user_registered", {
-        username: "tester",
-        fullname: "Tester Simulasi"
-      });
-    });
-
-    socket.on('chat message', async (msg) => {
-      // handle chat message
-    });
-
     socket.on('disconnect', () => {
-      console.log('🔴 User disconnected');
+      console.log('🔴 Socket disconnected');
     });
   });
-};
-
-// Fungsi untuk mengambil io dari luar (misalnya dari service)
-module.exports.getIO = function () {
-  if (!ioInstance) {
-    throw new Error("Socket.IO belum diinisialisasi");
-  }
-  return ioInstance;
 };

@@ -51,41 +51,72 @@
 <% } %>
 
 <script src="/socket.io/socket.io.js"></script>
-<script>
-  // Pastikan variabel socket sudah didefinisikan sebelumnya
-  function testNotif() {
-    console.log("Memicu notifikasi user baru...");
-    socket.emit('trigger_fake_register');
-  }
-</script>
 
 <script>
+document.addEventListener("DOMContentLoaded", function () {
   const socket = io();
 
-  // Ambil data user dari template EJS (pastikan variabel ada di res.locals)
-  const user = {
-    username: "<%= username %>",
-    id_level: 1 // Ganti dengan: <%= id_level %> jika kamu inject id_level dari backend
-  };
+  socket.emit("init_user");
 
-  // Join ke room admin jika user adalah admin
-  socket.emit('join_admin_room', user);
+  socket.on("joined_admin_room", () => {
+    console.log("✅ Admin joined room");
 
-  // Terima notifikasi user baru
-  socket.on('user_registered', (data) => {
-    console.log("Notifikasi user baru:", data);
+    socket.on("user_registered", (data) => {
+      console.log("📢 Notifikasi user baru:", data);
 
-    // Tambahkan ke UI notifikasi (misal ke elemen #notif)
-    const notif = document.getElementById('notif');
-    if (notif) {
-      const li = document.createElement('li');
-      li.textContent = `${data.fullname} (${data.username}) mendaftar.`;
-      notif.appendChild(li);
-    }
+      $.notify({
+        message: `${data.fullname} (${data.username}) baru saja mendaftar!`
+      }, {
+        type: 'info',
+        delay: 100000,
+        placement: {
+          from: 'top',
+          align: 'right'
+        }
+      });
 
-    // Atau tampilkan alert
-    alert(`${data.fullname} mendaftar! Silakan review dan approve.`);
+      const notifBadge = document.querySelector(".notification");
+      if (notifBadge) {
+        let count = parseInt(notifBadge.textContent || "0");
+        notifBadge.textContent = count + 1;
+        notifBadge.style.display = "inline-block";
+      } else {
+        console.warn("⚠️ .notification tidak ditemukan");
+      }
+
+      const notifTitle = document.getElementById("notif-title");
+      if (notifTitle) {
+        let current = parseInt(document.querySelector(".notification").textContent || "0");
+        notifTitle.textContent = `You have ${current + 1} new notification`;
+      } else {
+        console.warn("⚠️ #notif-title tidak ditemukan");
+      }
+
+      const notifCenter = document.getElementById("notif-center");
+      if (notifCenter) {
+        const notifItem = document.createElement("a");
+        notifItem.href = "#";
+        notifItem.innerHTML = `
+          <div class="notif-icon notif-primary border-radius" style="width: 60px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background-color: #007bff; color: white;">
+            <i class="fa fa-user-plus"></i>
+          </div>
+          <div class="notif-content">
+            <span class="block" style="width: 205px;">
+              ${data.message}
+            </span>
+            <span class="time">
+              ${new Date().toLocaleString('id-ID', { hour: '2-digit', minute: '2-digit' })}
+            </span>
+          </div>
+        `;
+        notifCenter.prepend(notifItem);
+      } else {
+        console.warn("⚠️ #notif-center tidak ditemukan");
+      }
+    });
   });
+});
+
 </script>
 
 <script>

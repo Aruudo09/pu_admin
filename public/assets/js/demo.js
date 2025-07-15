@@ -189,6 +189,7 @@ Circles.create({
 	styleText:    true
 })
 
+<<<<<<< HEAD
 //Notify
 // $.notify({
 // 	icon: 'icon-bell',
@@ -225,10 +226,83 @@ Circles.create({
 //       });
 //     });
 //   });
+=======
+// NOTIFIKASI POP UP
+fetch('/api/notification/unread')
+  .then(res => res.json())
+  .then(json => {
+	console.log('Pending User Notifications:', json);
+    if (json.status !== 'success' || !Array.isArray(json.data)) {
+      console.warn('Notifikasi gagal:', json.message);
+      return;
+    }
 
+    json.data.forEach(user => {
+      $.notify({
+        message: user.message
+      }, {
+        type: 'info',
+        delay: 100000,
+        placement: {
+          from: 'top',
+          align: 'right'
+        }
+      });
+    });
+  });
+>>>>>>> d7f9c83253b4619cc4f721d0fa2a41e25767fd42
 
+// NOTIFIKASI LONCENG
+document.addEventListener("DOMContentLoaded", () => {
+    fetch("/api/notification/unread")
+      .then((res) => res.json())
+      .then((json) => {
+        if (json.status !== "success" || !Array.isArray(json.data)) return;
 
+        const notifBadge = document.querySelector(".notification");
+        const notifTitle = document.getElementById("notif-title");
+        const notifCenter = document.getElementById("notif-center");
 
+        const notifs = json.data;
+        const count = notifs.length;
+
+        // 1. Update badge
+        if (notifBadge) {
+          notifBadge.textContent = count;
+          notifBadge.style.display = count > 0 ? "inline-block" : "none";
+        }
+
+        // 2. Update title
+        if (notifTitle) {
+          notifTitle.textContent = `You have ${count} new notification`;
+        }
+
+        // 3. Render each notification
+        if (notifCenter) {
+          notifCenter.innerHTML = ""; // clear dulu
+          if (count === 0) {
+            notifCenter.innerHTML = `
+              <div class="d-flex align-items-center justify-content-center" style="height: 50px;">
+                <span class="block text-center">Tidak ada notifikasi</span>
+              </div>`;
+          } else {
+            notifs.forEach((n) => {
+              const notifItem = document.createElement("a");
+              notifItem.href = "#";
+              notifItem.innerHTML = `
+                <div class="notif-icon notif-primary border-radius" style="width: 60px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background-color: #007bff; color: white;">
+                  <i class="fa fa-user-plus"></i>
+                </div>
+                <div class="notif-content">
+                  <span class="block" style="width: 205px;">${n.message}</span>
+                  <span class="time">${new Date(n.createdAt).toLocaleString('id-ID', { hour: '2-digit', minute: '2-digit' })}</span>
+                </div>`;
+              notifCenter.appendChild(notifItem);
+            });
+          }
+        }
+      });
+  });
 
 // Jsvectormap
 var world_map = new jsVectorMap({

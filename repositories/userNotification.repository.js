@@ -4,20 +4,21 @@ class UserNotificationRepository {
   async findByUserId(userId) {
     return await UserNotification.findOne({
       where: {
-        userId: userId,
-        isRead: false, // agar hanya satu notifikasi aktif per user
+        userId: userId
       }
     });
   }
 
-  async createNotification(data) {
-    return await UserNotification.create(data);
+  async createNotification(data, transaction) {
+    return await UserNotification.create(data, { transaction });
   }
 
   async getUnreadNotifications() {
-    return await UserNotification.findAll({
-      where: { isRead: false }
-    });
+    return await UserNotification.findAll();
+  }
+
+  async deleteNotification(userId) {
+    return await UserNotification.destroy({ where: { userId: userId } });
   }
 }
 

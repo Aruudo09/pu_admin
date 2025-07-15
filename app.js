@@ -13,21 +13,37 @@ const { injectUser } = require("./middleware"); // Pastikan middleware ini ada
 const app = express();
 const server = http.createServer(app); // Ganti dari app.listen
 const io = new Server(server); // Socket.IO instance
+const { setIO } = require("./utils/socketIO");
+setIO(io); // ✅ ini penting agar getIO() bisa dipakai di auth.service.js
 
 // ===> PASANG socket handler
-const socketHandler = require("./utils/socket");
-socketHandler(io); // aktifkan socket listener
+// const socketHandler = require("./utils/socket");
+// socketHandler(io); // aktifkan socket listener
 // <===
 
 // 🧠 Session setup
-app.use(
-  session({
-    secret: "rahasia_kamu",
-    resave: false,
-    saveUninitialized: true,
-    cookie: { secure: false },
-  })
-);
+// app.use(
+//   session({
+//     secret: "rahasia_kamu",
+//     resave: false,
+//     saveUninitialized: true,
+//     cookie: { secure: false },
+//   })
+// );
+
+// Buat satu instance sessionMiddleware
+const sessionMiddleware = session({
+  secret: "rahasia_kamu",
+  resave: false,
+  saveUninitialized: false, // disarankan untuk keamanan & efisiensi
+  cookie: { secure: false }, // kalau di production, ganti jadi true + pakai https
+});
+
+// Pakai di HTTP routes (Express)
+app.use(sessionMiddleware);
+
+const socketHandler = require("./utils/socket");
+socketHandler(io, sessionMiddleware); // Kirim session ke socket
 
 app.use(injectUser); // ⬅️ Middleware global
 app.use(express.static(path.join(__dirname, "public")));

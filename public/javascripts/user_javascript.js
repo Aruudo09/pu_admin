@@ -10,7 +10,7 @@ $(document).ready(function() {
       url: "/api/user/datatables", // Backend endpoint
       type: "GET",
       dataSrc: function (json) {
-        console.log("DataTables response:", json); // Debugging log
+        // console.log("DataTables response:", json); // Debugging log
         return json.data; // Extract the data array
       },
     },
@@ -18,11 +18,14 @@ $(document).ready(function() {
       {
         data: "id",
         render: function (data, type, row) {
-          console.log("Data ID:", row); // Debugging log
+          // console.log("Data ID:", row); // Debugging log
           let buttons = `<div class="d-flex gap-2 justify-content-center">`;
 
           if (row.akses && row.akses.edit) {
             buttons += `
+              <a href="#" class="btn btn-sm btn-info userApproval" data-id="${row.id}">
+                <i class="fa fa-check"></i>
+              </a>
               <a href="#" class="btn btn-sm btn-warning userEdit" data-id="${row.id}">
                 <i class="fa fa-edit"></i>
               </a>`;
@@ -40,7 +43,25 @@ $(document).ready(function() {
       },
       { data: "fullname", title: "Nama Lengkap" },
       { data: "username", title: "Username" },
-      { data: "id_level", title: "ID Level" }
+      { data: "level.nama_level",
+        title: "ID Level",
+        render: function (data, type, row) {
+          if (!data) return '';
+          return data.charAt(0).toUpperCase() + data.slice(1);
+        }
+      },
+      { data: "is_active", 
+        title: "Status",
+        render: function (data, type, row) {
+          if (data === 'Y') {
+            return '<span class="badge bg-success">Active</span>';
+          } else if (data === 'N') {
+            return '<span class="badge bg-secondary">Unvalidated</span>';
+          } else {
+            return '<span class="badge bg-warning">Unknown</span>';
+          }
+        }
+      },
     ],
     columnDefs: [
       // { responsivePriority: 1, targets: 0 }, // Title
@@ -180,6 +201,49 @@ $(document).ready(function() {
           swal({
             icon: "success",
             title: "Terhapus!",
+            text: data.message,
+            timer: 1500,
+            buttons: false,
+          }).then(() => {
+            location.reload();
+          });
+          } else {
+          swal("Gagal!", data.message || "Terjadi kesalahan", "error");
+          }
+        } catch (err) {
+          swal("Error!", "Gagal menghubungi server", "error");
+        }
+        }
+      });
+      }
+    });
+
+
+    // APPROVAL USER
+    document.getElementById("userTable").addEventListener("click", async (e) => {
+      if (e.target.closest(".userApproval")) {
+      e.preventDefault();
+      const btn = e.target.closest(".userApproval");
+      const id = btn.getAttribute("data-id");
+    
+      swal({
+        title: "Apakah anda mau menyetujui pengguna ini?",
+        icon: "warning",
+        buttons: ["Batal", "Ya!"],
+        dangerMode: true,
+      }).then(async (willDelete) => {
+        if (willDelete) {
+        try {
+          const res = await fetch(`/api/user/${id}/approve`, {
+          method: "PUT",
+          });
+    
+          const data = await res.json();
+    
+          if (data.status === "success") {
+          swal({
+            icon: "success",
+            title: "Disetujui!",
             text: data.message,
             timer: 1500,
             buttons: false,
