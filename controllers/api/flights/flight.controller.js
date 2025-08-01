@@ -11,6 +11,28 @@ class FlightController {
     }
   }
 
+  async getAllFlightDatatables(req, res) {
+    try {
+      const { akses } = res.locals;
+      if (akses.view_level !== "Y") {
+        return res.status(403).json({ error: "Access denied" });
+      }
+
+      const result = await flightService.getAllFlightsDatatables(req.query);
+      result.data = result.data.map(row => ({
+        ...row.get({ plain: true }),
+        akses: {
+          edit: akses.edit_level === "Y",
+          delete: akses.delete_level === "Y"
+        }
+      }));
+      return response.datatables(res, result);
+    } catch (error) {
+      console.error("Error getAllFlightDatatables:", error);
+      return response.error(res, error.message);
+    }
+  }
+
   async getFlightById(req, res) {
     try {
       const flight = await flightService.getFlightById(req.params.id);

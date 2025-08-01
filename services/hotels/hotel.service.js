@@ -1,9 +1,29 @@
+const { parse } = require('dotenv');
 const HotelRepository = require('../../repositories/hotels/hotel.repository');
 
 class HotelService {
   async getAllHotels() {
     const hotels = await HotelRepository.getAllHotels();
     return hotels || [];
+  }
+
+  async getAllHotelsDatatables({ draw, start, length, search, order, columns }) {
+    const searchValue = search?.value || "";
+
+    const { count, rows } = await HotelRepository.getPaginatedHotels({
+      start: parseInt(start, 10) || 0,
+      length: parseInt(length, 10) || 10,
+      search: searchValue,
+      order,
+      columns
+    });
+
+    return {
+      draw: parseInt(draw, 10),
+      recordsTotal: count,
+      recordsFiltered: count,
+      data: rows
+    };
   }
 
   async getHotelById(id) {

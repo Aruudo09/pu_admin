@@ -6,7 +6,8 @@ module.exports = {
     await queryInterface.createTable('package_facilities', {
       id: { type: Sequelize.INTEGER, autoIncrement: true, primaryKey: true },
       package_id: { type: Sequelize.INTEGER, allowNull: false, references: { model: 'umrah_packages', key: 'id' } },
-      facility_id: { type: Sequelize.INTEGER, allowNull: false, references: { model: 'facilities', key: 'id' } },
+      facility: { type: Sequelize.STRING, allowNull: false },
+      status: { type: Sequelize.STRING, allowNull: false }
     });
   },
 

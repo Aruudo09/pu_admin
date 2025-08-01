@@ -9,8 +9,12 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.INTEGER,
             allowNull: false,
         },
-        facility_id: {
-            type: DataTypes.INTEGER,
+        facility: {
+            type: DataTypes.STRING,
+            allowNull: false,
+        },
+        status: {
+            type: DataTypes.ENUM('termasuk', 'tidak_termasuk'),
             allowNull: false,
         },
     }, {
@@ -20,7 +24,6 @@ module.exports = (sequelize, DataTypes) => {
 
     PackageFacility.associate = (models) => {
         PackageFacility.belongsTo(models.UmrahPackage, { foreignKey: 'package_id' });
-        PackageFacility.belongsTo(models.Facility, { foreignKey: 'facility_id' });
     }
 
     return PackageFacility;

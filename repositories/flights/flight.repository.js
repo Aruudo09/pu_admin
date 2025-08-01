@@ -10,11 +10,12 @@ class FlightRepository {
     const where = {
       ...(search && {
         [Op.or]: [
-          { flightNumber: { [Op.like]: `%${search}%` } },
-          { origin: { [Op.like]: `%${search}%` } },
-          { destination: { [Op.like]: `%${search}%` } },
-          { departureTime: { [Op.like]: `%${search}%` } },
-          { arrivalTime: { [Op.like]: `%${search}%` } }
+          { airline: { [Op.like]: `%${search}%` } },
+          { flight_number: { [Op.like]: `%${search}%` } },
+          { departure_airport: { [Op.like]: `%${search}%` } },
+          { arrival_airport: { [Op.like]: `%${search}%` } },
+          { departure_time: { [Op.like]: `%${search}%` } },
+          { arrival_time: { [Op.like]: `%${search}%` } }
         ]
       }),
     };

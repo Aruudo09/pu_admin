@@ -11,11 +11,10 @@ class HotelRepository {
       ...(search && {
         [Op.or]: [
           { name: { [Op.like]: `%${search}%` } },
+          { location: { [Op.like]: `%${search}%` } },
+          { rating: { [Op.like]: `%${search}%` } },
           { description: { [Op.like]: `%${search}%` } },
-          { address: { [Op.like]: `%${search}%` } },
-          { phone: { [Op.like]: `%${search}%` } },
-          { email: { [Op.like]: `%${search}%` } },
-          { created_at: { [Op.like]: `%${search}%` } }
+          { createdAt: { [Op.like]: `%${search}%` } }
         ]
       }),
     };
@@ -23,8 +22,7 @@ class HotelRepository {
     const sort =
       order && order.length > 0
         ? [[columns[order[0].column].data, order[0].dir]]
-        : [["created_at", "DESC"]];
-
+        : [["createdAt", "DESC"]];
     const offset = start || 0; // Default to 0 if start is not provided
     const limit = length || 10; // Default to 10 if length is not provided
 

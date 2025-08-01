@@ -6,7 +6,7 @@ document.addEventListener("DOMContentLoaded", () => {
     scrollX: false,
     autowidth: true,
     ajax: {
-      url: '/api/travel/datatables', // Backend endpoint
+      url: '/api/hotels/hotelPackage/datatables', // Backend endpoint
       type: 'GET',
       dataSrc: function (json) {
         // console.log("DataTables response:", json); // Debugging log
@@ -37,15 +37,10 @@ document.addEventListener("DOMContentLoaded", () => {
           return buttons;
         }
       },
-      { data: 'name', title: 'Nama Travel' },
-      { data: 'description', title: 'Deskripsi' },
-      { data: 'logo_url', title: 'Logo URL' },
-      { data: 'contact_person', title: 'Contact Person' },
-      { data: 'phone', title: 'Phone' },
-      { data: 'email', title: 'Email' },
-      { data: 'address', title: 'Address' },
-      { data: 'website', title: 'Website' },
-      { data: 'is_verified', title: 'Is Verified' },
+      { data: 'package_id', title: 'Nama Paket' },
+      { data: 'hotel_id', title: 'Nama Hotel' },
+      { data: 'location', title: 'Lokasi' },
+      { data: 'number_of_night', title: 'Durasi Penginapan' },
       { data: 'created_at', title: 'Dibuat Pada' }
     ],
     drawCallback: function () {
@@ -54,17 +49,31 @@ document.addEventListener("DOMContentLoaded", () => {
     },
     "columnDefs": [
       {
-        "targets": [1,2,3,4,5,6,7],
+        "targets": [],
         "className": 'dt-body-nowrap'
       }, {
-        "targets": [0, 1],
+        "targets": [],
         "orderable": false,
       },
       ]
   });
 
+      var distanceInput = document.getElementById('distance');
+      var numberOfNightInput = document.getElementById('number_of_night');
+        if (distanceInput) {
+          distanceInput.addEventListener('input', function(e) {
+            this.value = this.value.replace(/[^0-9]/g, '');
+          });
+        } 
+
+        if (numberOfNightInput) {
+          numberOfNightInput.addEventListener('input', function(e) {
+            this.value = this.value.replace(/[^0-9]/g, '');
+          });
+        }
+
   // CREATE OR UPDATE
-  document.getElementById("submitTravelBtn").addEventListener("click", async () => {
+  document.getElementById("submitHotelPackageBtn").addEventListener("click", async () => {
     const id = document.getElementById("hidden_id").value;
     const name = document.getElementById("name").value;
     const logo_url = document.getElementById("logo_url").value;

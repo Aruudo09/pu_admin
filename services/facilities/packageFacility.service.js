@@ -17,7 +17,7 @@ class PackageFacilityService {
 
   async createPackageFacility(packageFacilityData) {
     try {
-      const requiredFields = ["package_id", "facility_id"];
+      const requiredFields = ["package_id", "facility", "status"];
 
       if (!requiredFields.every(field => packageFacilityData[field])) {
         throw new Error("Semua field wajib diisi"); // Validasi input

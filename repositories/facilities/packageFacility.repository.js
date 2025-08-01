@@ -10,8 +10,8 @@ class PackageFacilityRepository {
     const where = {
       ...(search && {
         [Op.or]: [
-          { name: { [Op.like]: `%${search}%` } },
-          { description: { [Op.like]: `%${search}%` } },
+          { facility: { [Op.like]: `%${search}%` } },
+          { status: { [Op.like]: `%${search}%` } },
           { created_at: { [Op.like]: `%${search}%` } }
         ]
       }),

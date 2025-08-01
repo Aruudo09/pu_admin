@@ -3,7 +3,6 @@ const router = express.Router();
 const { auth, loadSidebar, loadNotification } = require("../../middleware");
 const GalleryService = require("../../services/galleries/gallery.service");
 const galleryCategoryService = require("../../services/galleries/galleryCategory.service");
-const loadNotification = require("../../middleware/loadNotification");
 
 // TAMPILAN LIST
 router.get("/", auth.ensureAuth, loadSidebar, loadNotification, async (req, res) => {

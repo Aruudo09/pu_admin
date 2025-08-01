@@ -6,6 +6,23 @@ class FlightService {
     return flights || [];
   }
 
+  async getAllFlightsDatatables({ draw, start, length, search, order, columns }) {
+    const searchValue = search?.value || "";
+    const { count, rows } = await FlightRepository.getPaginatedFlights({
+      start: parseInt(start, 10) || 0,
+      length: parseInt(length, 10) || 10,
+      search: searchValue,
+      order,
+      columns
+    });
+    return {
+      draw: parseInt(draw, 10),
+      recordsTotal: count,
+      recordsFiltered: count,
+      data: rows
+    };
+  }
+
   async getFlightById(id) {
     try {
       const flight = await FlightRepository.getFlightById(id);
