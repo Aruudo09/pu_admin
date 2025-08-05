@@ -1,14 +1,16 @@
 document.addEventListener("DOMContentLoaded", () => {
-  $('#umrahPackage').DataTable({
+
+  $('#flightTable').DataTable({
     processing: true,
     serverSide: true,
     responsive: false,
     scrollX: false,
     autowidth: true,
     ajax: {
-      url: '/api/umrahPackage/datatables', // Backend endpoint
+      url: '/api/flights/flight/datatables', // Backend endpoint
       type: 'GET',
       dataSrc: function (json) {
+        // console.log("DataTables response:", json); // Debugging log
         return json.data; // Extract the data array
       }
     },
@@ -16,18 +18,18 @@ document.addEventListener("DOMContentLoaded", () => {
             {
         data: 'id',
         render: function (data, type, row) {
-          // console.log("Data ID:", row); // Debugging log
+        //   console.log("Data ID:", row); // Debugging log
           let buttons = `<div class="d-flex gap-2 justify-content-center">`;
 
           if (row.akses && row.akses.edit) {
             buttons += `
-              <a href="#" class="btn btn-sm btn-warning umrahPackageEdit" data-id="${row.id}">
+              <a href="#" class="btn btn-sm btn-warning flightEdit" data-id="${row.id}">
                 <i class="fa fa-edit"></i>
               </a>`;
           }
           if (row.akses && row.akses.delete) {
             buttons += `
-              <a href="#" class="btn btn-sm btn-danger umrahPackageDelete" data-id="${row.id}">
+              <a href="#" class="btn btn-sm btn-danger flightDelete" data-id="${row.id}">
                 <i class="fa fa-times"></i>
               </a>`;
           }
@@ -36,13 +38,12 @@ document.addEventListener("DOMContentLoaded", () => {
           return buttons;
         }
       },
-      { data: 'name', title: 'Nama Paket' },
-      { data: 'agency.name', title: 'Nama Travel' },
-      { data: 'package_type', title: 'Tipe Paket' },
-      { data: 'price', title: 'Harga' },
-      { data: 'duration_days', title: 'Durasi' },
-      { data: 'description', title: 'Deskripsi' },
-      { data: 'created_at', title: 'Dibuat Pada' }
+      { data: 'airline', title: 'Airline' },
+      { data: 'flight_number', title: 'Flight Number' },
+      { data: 'departure_airport', title: 'Departure' },
+      { data: 'arrival_airport', title: 'Arrival' },
+      { data: 'departure_time', title: 'Departure Time' },
+      { data: 'arrival_time', title: 'Arrival Time' }
     ],
     drawCallback: function () {
       // Force redraw untuk sync header & body
@@ -50,28 +51,28 @@ document.addEventListener("DOMContentLoaded", () => {
     },
     "columnDefs": [
       {
-        "targets": [1,2,3],
+        "targets": [],
         "className": 'dt-body-nowrap'
       }, {
-        "targets": [0, 1],
+        "targets": [],
         "orderable": false,
       },
       ]
   });
 
   // CREATE OR UPDATE
-  document.getElementById("submitUmrahPackageBtn").addEventListener("click", async () => {
+  document.getElementById("submitFlightBtn").addEventListener("click", async () => {
     const id = document.getElementById("hidden_id").value;
-    const name = document.getElementById("name").value;
-    const travel_agency_id = document.getElementById("travel_agency_id").value;
-    const package_type = document.getElementById("package_type").value;
-    const price = document.getElementById("price").value;
-    const duration_days = document.getElementById("duration_days").value;
-    const description = document.getElementById("description").value;
+    const airline = document.getElementById("airline").value;
+    const flight_number = document.getElementById("flight_number").value;
+    const departure_airport = document.getElementById("departure_airport").value;
+    const arrival_airport = document.getElementById("arrival_airport").value;
+    const departure_time = document.getElementById("departure_time").value;
+    const arrival_time = document.getElementById("arrival_time").value;
 
     // Tentukan URL dan method berdasarkan id
     const isUpdate = id !== "";
-    const url = isUpdate ? `/api/umrahPackage/${id}` : `/api/umrahPackage`;
+    const url = isUpdate ? `/api/flights/flight/${id}` : `/api/flights/flight`;
     const method = isUpdate ? "PUT" : "POST";
 
     try {
@@ -81,19 +82,19 @@ document.addEventListener("DOMContentLoaded", () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          name,
-          travel_agency_id,
-          package_type,
-          price,
-          duration_days,
-          description,
+          airline,
+          flight_number,
+          departure_airport,
+          arrival_airport,
+          departure_time,
+          arrival_time,
         }),
       });
 
       const data = await res.json();
 
       if (res.ok) {
-        swal("Berhasil!", data.message || "Travel berhasil ditambahkan", "success");
+        swal("Berhasil!", data.message || "Flight berhasil ditambahkan", "success");
         setTimeout(() => location.reload(), 1500);
       } else {
         swal("Gagal!", data.message || "Terjadi kesalahan saat menyimpan data", "error");
@@ -103,32 +104,32 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // MENGISI VALUE FORM (EDIT)
+//   // MENGISI VALUE FORM (EDIT)
   document.addEventListener("click", async (e) => {
-    if (e.target.closest(".umrahPackageEdit")) {
+    if (e.target.closest(".flightEdit")) {
       e.preventDefault();
-      const btn = e.target.closest(".umrahPackageEdit");
+      const btn = e.target.closest(".flightEdit");
       const id = btn.getAttribute("data-id");
 
       try {
-        const res = await fetch(`/api/umrahPackage/${id}`);
+        const res = await fetch(`/api/flights/flight/${id}`);
         const data = await res.json();
 
         if (data.status === "success") {
-          const packages = data.data;
+          const flight = data.data;
 
-          document.getElementById("hidden_id").value = packages.id;
-          document.getElementById("name").value = packages.name;
-          document.getElementById("travel_agency_id").value = packages.travel_agency_id;
-          document.getElementById("package_type").value = packages.package_type;
-          document.getElementById("price").value = packages.price;
-          document.getElementById("duration_days").value = packages.duration_days;
-          document.getElementById("description").value = packages.description;
+            document.getElementById("hidden_id").value = flight.id;
+            document.getElementById("airline").value = flight.airline;
+            document.getElementById("flight_number").value = flight.flight_number;
+            document.getElementById("departure_airport").value = flight.departure_airport;
+            document.getElementById("arrival_airport").value = flight.arrival_airport;
+            document.getElementById("departure_time").value = flight.departure_time;
+            document.getElementById("arrival_time").value = flight.departure_time;
 
-          const modal = new bootstrap.Modal(document.getElementById("umrahPackageFormModal"));
+          const modal = new bootstrap.Modal(document.getElementById("flightFormModal"));
           modal.show();
         } else {
-          swal("Gagal", "Travel tidak ditemukan", "error");
+          swal("Gagal", "Flight tidak ditemukan", "error");
         }
       } catch (err) {
         swal("Error", "Gagal menghubungi server", "error");
@@ -136,17 +137,17 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // RESET SAAT MENUTUP MODAL
-  document.getElementById('umrahPackageFormModal').addEventListener('hidden.bs.modal', function () {
-    document.getElementById("umrahPackageForm").reset();
+//   // RESET SAAT MENUTUP MODAL
+  document.getElementById('flightFormModal').addEventListener('hidden.bs.modal', function () {
+    document.getElementById("hotelInput").reset();
     document.getElementById("hidden_id").value = '';
   });
 
-  // DELETE
+//   // DELETE
   document.addEventListener("click", (e) => {
-    if (e.target.closest(".umrahPackageDelete")) {
+    if (e.target.closest(".flightDelete")) {
       e.preventDefault();
-      const btn = e.target.closest(".umrahPackageDelete");
+      const btn = e.target.closest(".flightDelete");
       const id = btn.getAttribute("data-id");
 
       swal({
@@ -157,7 +158,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }).then(async (willDelete) => {
         if (willDelete) {
           try {
-            const res = await fetch(`/api/umrahPackage/${id}`, {
+            const res = await fetch(`/api/flights/flight/${id}`, {
               method: "DELETE",
             });
 

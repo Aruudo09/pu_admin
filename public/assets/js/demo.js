@@ -189,44 +189,6 @@ Circles.create({
 	styleText:    true
 })
 
-<<<<<<< HEAD
-//Notify
-// $.notify({
-// 	icon: 'icon-bell',
-// 	title: 'Kaiadmin',
-// 	message: 'Premium Bootstrap 5 Admin Dashboard',
-// },{
-// 	type: 'secondary',
-// 	placement: {
-// 		from: "bottom",
-// 		align: "right"
-// 	},
-// 	time: 1000,
-// });
-
-// fetch('/api/notification/pending')
-//   .then(res => res.json())
-//   .then(json => {
-// 	console.log('Pending User Notifications:', json);
-//     if (json.status !== 'success' || !Array.isArray(json.data)) {
-//       console.warn('Notifikasi gagal:', json.message);
-//       return;
-//     }
-
-//     json.data.forEach(user => {
-//       $.notify({
-//         message: user.message
-//       }, {
-//         type: 'info',
-//         delay: 10000,
-//         placement: {
-//           from: 'top',
-//           align: 'right'
-//         }
-//       });
-//     });
-//   });
-=======
 // NOTIFIKASI POP UP
 fetch('/api/notification/unread')
   .then(res => res.json())
@@ -250,7 +212,6 @@ fetch('/api/notification/unread')
       });
     });
   });
->>>>>>> d7f9c83253b4619cc4f721d0fa2a41e25767fd42
 
 // NOTIFIKASI LONCENG
 document.addEventListener("DOMContentLoaded", () => {

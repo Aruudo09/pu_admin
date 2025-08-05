@@ -15,7 +15,9 @@ module.exports = {
         references: {
           model: 'umrah_packages',
           key: 'id'
-        }
+        },
+        onDelete: 'CASCADE',
+        onUpdate: 'CASCADE'
       },
       departure_date: {
         type: Sequelize.DATE,
@@ -43,6 +45,6 @@ module.exports = {
   },
 
   async down (queryInterface, Sequelize) {
-    await queryInterface.bulkDelete('departure_details', null, {});
+    await queryInterface.dropTable('departure_details');
   }
 };

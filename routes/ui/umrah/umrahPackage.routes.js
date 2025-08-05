@@ -1,20 +1,19 @@
 const express = require("express");
 const router = express.Router();
 const { auth, loadSidebar, loadNotification } = require("../../../middleware");
-const hotelPackage = require("../../../services/hotels/hotelPackage.service");
+const umrah = require("../../../services/umrahPackage.service");
 
 // TAMPILAN LIST
 router.get("/", auth.ensureAuth, loadSidebar, loadNotification, async (req, res) => {
   try {
-    const packages = await hotelPackage.getAllHotelPackages();
+    // const packages = await hotel.getAllHotels();
 
     res.render("home", {
-      link: "hotels/hotelPackage_list",
-      jslink: "/javascripts/hotelPackage_javascript.js",
+      link: "umrahPackage/umrahPackage_list",
+      jslink: "/javascripts/umrahPackage_javascript.js",
       user: req.session.user,
       username: req.session.user?.username || "Guest",
       fullname: req.session.user?.fullname || "Guest",
-      packages
     });
   } catch (error) {
     console.error("❌ Error loading travels:", error.message);
